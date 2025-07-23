@@ -1,0 +1,70 @@
+.project-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #69b5f8;
+  transition: all 0.2s ease;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+  position: relative;
+  max-width: 240px;
+  min-height: 200px;
+}
+
+/* .project-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+} */
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.project-title {
+  font-size: 20px;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.4;
+}
+
+.project-actions {
+  margin-top: auto;
+}
+
+.project-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  background-color: #ffffff;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-radius: 0 0 12px 12px;
+  min-height: 50px;
+  padding: 0 16px;
+}
+
+.btn-menu {
+  outline: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.folder-icon {
+  color: white;
+}
+
+.menu-container {
+  position: relative;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

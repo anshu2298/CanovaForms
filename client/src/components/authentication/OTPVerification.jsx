@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
+import "./authentication.css";
 function OTPVerification({ email }) {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
@@ -24,12 +25,14 @@ function OTPVerification({ email }) {
       const data = await res.json();
 
       if (data.success) {
+        toast.success("OTP verified successfully");
         navigate("/reset-password");
       } else {
-        console.log(data.message || "Invalid OTP");
+        toast.error(data.message || "Invalid OTP");
       }
     } catch (err) {
-      console.log("Something went wrong", err);
+      console.error("Error:", err);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }

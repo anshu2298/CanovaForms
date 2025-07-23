@@ -1,4 +1,6 @@
+import "./authentication.css";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +18,7 @@ function ResetPassword({ email }) {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      console.log("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -40,13 +42,14 @@ function ResetPassword({ email }) {
       const data = await res.json();
 
       if (data.success) {
-        alert("Password reset successful!");
+        toast.success("Password reset successful!");
         navigate("/login");
       } else {
-        console.log(data.message || "Reset failed");
+        toast.error(data.message || "Reset failed");
       }
     } catch (err) {
-      console.log("Something went wrong", err);
+      console.error("Error:", err);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }

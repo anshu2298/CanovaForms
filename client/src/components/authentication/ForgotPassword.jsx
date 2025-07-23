@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import "./authentication.css";
+import { toast } from "react-toastify";
 const ForgotPassword = ({ email, setEmail }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -27,12 +28,12 @@ const ForgotPassword = ({ email, setEmail }) => {
           data?.message || "Something went wrong"
         );
       }
-
-      // Store email in sessionStorage to persist across route change
+      toast.success("OTP sent successfully");
       sessionStorage.setItem("resetEmail", email);
       navigate("/otp");
     } catch (err) {
-      console.error("Error:", err);
+      console.error(err);
+      toast.error("Failed to send OTP");
     } finally {
       setLoading(false);
     }

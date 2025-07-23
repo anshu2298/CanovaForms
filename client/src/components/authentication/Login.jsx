@@ -1,8 +1,12 @@
+import "./authentication.css";
 import { useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 const Login = () => {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +26,7 @@ const Login = () => {
       authState === "signup" &&
       password !== confirmPassword
     ) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -37,9 +41,6 @@ const Login = () => {
         : { name, email, password };
 
     try {
-      await new Promise((resolve) =>
-        setTimeout(resolve, 2000)
-      );
       const res = await fetch(url, {
         method: "POST",
         headers: {
@@ -52,18 +53,15 @@ const Login = () => {
       const data = await res.json();
 
       if (data.success) {
-        alert(
-          authState === "login"
-            ? "Login successful!"
-            : "Registration successful!"
-        );
-        // TODO: redirect to dashboard or set auth context
+        toast.success("Login successful!");
+        login();
+        navigate("/dashboard");
       } else {
-        alert(data.message || "Something went wrong");
+        toast.error(data.message || "Something went wrong");
       }
     } catch (err) {
       console.error("Error:", err);
-      alert("Server error");
+      toast.error("Server error");
     } finally {
       setLoading(false);
     }

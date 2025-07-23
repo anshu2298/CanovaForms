@@ -1,0 +1,19 @@
+.recent-works {
+  margin-bottom: 48px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.works-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(200px, 1fr)
+  );
+  gap: 20px;
+}

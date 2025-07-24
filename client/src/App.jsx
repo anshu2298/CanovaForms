@@ -18,8 +18,8 @@ import ResetPassword from "./components/authentication/ResetPassword";
 import { useState } from "react";
 import RedirectIfAuth from "./utils/RedirectIfAuth";
 import RequireAuth from "./utils/RequiredAuth";
-import FormPage from "./pages/Forms/FormPage";
 import ProjectDetailsPage from "./pages/DashboardLayout/ProjectDetailsPage/ProjectDetailsPage";
+import BuildFormPage from "./pages/Forms/BuildFormPage";
 
 const App = () => {
   const [email, setEmail] = useState("");
@@ -99,7 +99,7 @@ const App = () => {
           path='/form-page'
           element={
             <RequireAuth>
-              <FormPage />
+              <BuildFormPage />
             </RequireAuth>
           }
         />

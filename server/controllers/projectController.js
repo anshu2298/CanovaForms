@@ -9,7 +9,7 @@ const createProject = async (req, res) => {
   session.startTransaction();
   try {
     const { projectName, formName } = req.body;
-    const userId = req.user; // assuming req.user contains the logged-in user ID
+    const userId = req.user;
 
     if (!projectName || !formName)
       return res.status(400).json({
@@ -91,9 +91,7 @@ const deleteProject = async (req, res) => {
         .json({ message: "Project not found" });
 
     // Optional: delete all forms linked to this project
-    // await Form.deleteMany({ project: projectId });
-
-    // await project.remove();
+    await Form.deleteMany({ project: projectId });
 
     return res
       .status(200)

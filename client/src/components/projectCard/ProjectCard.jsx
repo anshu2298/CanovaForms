@@ -6,9 +6,13 @@ import DropdownMenu from "../dropdownMenu/DropdownMenu";
 import { Link } from "react-router-dom";
 import { useProjects } from "../../context/ProjectContext";
 function ProjectCard({ project }) {
-  const { deleteProject } = useProjects();
+  const { deleteProject, updateProject } = useProjects();
   const [isDropdownOpen, setIsDropdownOpen] =
     useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [editedName, setEditedName] = useState(
+    project.name
+  );
   const menuButtonRef = useRef(null);
 
   const handleMenuClick = (e) => {
@@ -18,6 +22,13 @@ function ProjectCard({ project }) {
 
   const handleCloseDropdown = () => {
     setIsDropdownOpen(false);
+  };
+
+  const handleRenameSubmit = async () => {
+    if (editedName.trim() && editedName !== project.name) {
+      await updateProject(project._id, editedName);
+    }
+    setIsRenaming(false);
   };
   return (
     <div className='project-card'>
@@ -30,7 +41,22 @@ function ProjectCard({ project }) {
         </div>
       </Link>
       <div className='project-footer'>
-        <p className='project-title'>{project.name}</p>
+        {isRenaming ? (
+          <input
+            className='rename-input'
+            value={editedName}
+            onChange={(e) => setEditedName(e.target.value)}
+            onBlur={handleRenameSubmit}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleRenameSubmit();
+              }
+            }}
+            autoFocus
+          />
+        ) : (
+          <p className='project-title'>{project.name}</p>
+        )}
         <div className='menu-container'>
           <button
             className='btn-menu'
@@ -43,14 +69,13 @@ function ProjectCard({ project }) {
             <DropdownMenu
               isOpen={isDropdownOpen}
               onClose={handleCloseDropdown}
-              project={project}
-              itemType='project'
               itemId={project._id}
               onAction={(actionId, id) => {
                 if (actionId === "delete") {
                   deleteProject(id);
+                } else if (actionId === "rename") {
+                  setIsRenaming(true);
                 }
-                // Handle other actions like "rename", "share" here if needed
               }}
             />
           )}

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const formSchema = new mongoose.Schema({
-  title: { type: String, required: true },
+  title: { type: String, default: "Untitled Form" },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   user: {

@@ -6,7 +6,6 @@ function DropdownMenu({
   onClose,
   onAction,
   itemId,
-  itemType,
 }) {
   const menuRef = useRef(null);
 

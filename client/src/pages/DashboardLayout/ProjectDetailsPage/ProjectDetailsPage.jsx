@@ -3,12 +3,21 @@ import "./ProjectDetailsPage.css";
 import { useNavigate, useParams } from "react-router-dom";
 import FormCard from "../../../components/formCard/FormCard";
 import { useProjects } from "../../../context/ProjectContext";
+import { useEffect } from "react";
+import { useForms } from "../../../context/FormContext";
 const ProjectDetailsPage = () => {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const { projects } = useProjects();
+  const { forms, fetchForms, createFormsInsideProject } =
+    useForms();
 
   const project = projects.find((p) => p._id === projectId);
+
+  useEffect(() => {
+    fetchForms(projectId);
+  }, [projectId]);
+
   return (
     <div className='project-details-page'>
       <div className='project-details-header'>
@@ -23,14 +32,20 @@ const ProjectDetailsPage = () => {
         </p>
       </div>
       <div className='project-details-content'>
-        <FormCard />
-        <FormCard />
-        <FormCard />
-        <FormCard />
-        <FormCard />
+        {forms.map((form) => (
+          <FormCard
+            key={form._id}
+            form={form}
+          />
+        ))}
       </div>
       <div className='project-details-footer'>
-        <button className='add-forms-btn'>
+        <button
+          className='add-forms-btn'
+          onClick={() => {
+            createFormsInsideProject(projectId);
+          }}
+        >
           Create New Forms
         </button>
       </div>

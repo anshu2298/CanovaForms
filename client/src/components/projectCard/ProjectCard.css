@@ -12,11 +12,6 @@
   min-height: 200px;
 }
 
-/* .project-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
-} */
-
 .project-header {
   display: flex;
   justify-content: space-between;
@@ -67,4 +62,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.rename-input {
+  font-size: 20px;
+  font-weight: 400;
+  color: #212529;
+  border: none;
+  outline: none;
+  background: none;
+  padding: 8px 0;
+  min-width: 150px;
+}
+
+.rename-input:focus {
+  border-bottom: 2px solid #64b5f6;
 }

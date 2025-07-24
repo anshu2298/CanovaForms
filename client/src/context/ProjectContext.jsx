@@ -11,11 +11,14 @@ export const ProjectsProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const filteredProjects = projects.filter((project) =>
-    project.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase())
-  );
+
+  const filteredProjects = Array.isArray(projects)
+    ? projects.filter((project) =>
+        project.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+      )
+    : [];
 
   const fetchProjects = async () => {
     try {
@@ -61,14 +64,45 @@ export const ProjectsProvider = ({ children }) => {
           data.message || "Failed to create project"
         );
       }
-
-      // Optionally update context state
       await fetchProjects();
       toast.success("Project created successfully!");
-      return data; // in case caller wants to navigate to project or use the form
+      return data;
     } catch (err) {
       console.error("Create Project Error:", err);
       toast.error(err.message || "Something went wrong");
+    }
+  };
+
+  const updateProject = async (projectId, name) => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/project/update/${projectId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ name }), // only send name
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success("Project name updated.");
+        fetchProjects();
+      } else {
+        toast.error(data.message || "Update failed");
+      }
+    } catch (err) {
+      console.error("Error updating project name:", err);
+      toast.error(
+        "Something went wrong while updating project name."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -114,6 +148,7 @@ export const ProjectsProvider = ({ children }) => {
         setSearchQuery,
         searchQuery,
         filteredProjects,
+        updateProject,
       }}
     >
       {children}

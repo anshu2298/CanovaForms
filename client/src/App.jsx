@@ -96,7 +96,7 @@ const App = () => {
 
         {/* Form Route */}
         <Route
-          path='/form-page'
+          path='/form-page/:formId'
           element={
             <RequireAuth>
               <BuildFormPage />

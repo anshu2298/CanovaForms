@@ -1,40 +1,35 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useFormCreation } from "../../context/FormCreationContext";
+import { useForms } from "../../context/FormContext";
 import FormSidebar from "../../components/formSidebar/FormSidebar";
 import FormCanvas from "../../components/formCanvas/FormCanvas";
 import "./BuildFormPage.css";
+
 function BuildFormPage() {
-  const [pages, setPages] = useState([
-    { id: "page-01", name: "Page 01", active: true },
-    { id: "page-02", name: "Page 02", active: false },
-    { id: "page-03", name: "Page 03", active: false },
-    { id: "page-04", name: "Page 04", active: false },
-  ]);
+  const { formId } = useParams();
+  const {
+    pages,
+    addNewPage,
+    setActivePage,
+    title,
+    setFormTitle,
+    addSectionToActivePage,
+    activePage,
+    initializeFormState,
+  } = useFormCreation();
 
-  const [formTitle, setFormTitle] = useState("Title");
+  const { formByID, fetchFormsById } = useForms();
 
-  const addNewPage = () => {
-    const newPageNumber = pages.length + 1;
-    const newPage = {
-      id: `page-${newPageNumber
-        .toString()
-        .padStart(2, "0")}`,
-      name: formTitle,
-      // name: `Page ${newPageNumber
-      //   .toString()
-      //   .padStart(2, "0")}`,
-      active: false,
-    };
-    setPages([...pages, newPage]);
-  };
+  useEffect(() => {
+    fetchFormsById(formId);
+  }, [formId]);
 
-  const setActivePage = (pageId) => {
-    setPages(
-      pages.map((page) => ({
-        ...page,
-        active: page.id === pageId,
-      }))
-    );
-  };
+  useEffect(() => {
+    if (formByID?._id) {
+      initializeFormState(formByID);
+    }
+  }, [formByID]);
 
   return (
     <div className='form-builder'>
@@ -44,8 +39,9 @@ function BuildFormPage() {
         onSelectPage={setActivePage}
       />
       <FormCanvas
-        title={formTitle}
+        title={title}
         onTitleChange={setFormTitle}
+        onAddSection={addSectionToActivePage}
       />
     </div>
   );

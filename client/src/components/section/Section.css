@@ -1,0 +1,18 @@
+.form-section {
+  border-radius: 8px;
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: black 1px solid;
+}
+
+.section-header h4 {
+  margin: 0 0 12px;
+}
+
+.section-body {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 6px;
+}

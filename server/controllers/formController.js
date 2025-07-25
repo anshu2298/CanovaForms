@@ -24,6 +24,31 @@ const getFormsByProjectId = async (req, res) => {
   }
 };
 
+const getFormById = async (req, res) => {
+  const { formId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(formId)) {
+    return res
+      .status(400)
+      .json({ message: "Invalid form ID" });
+  }
+  try {
+    const form = await Form.findById(formId);
+
+    if (!form) {
+      return res
+        .status(404)
+        .json({ message: "Form not found" });
+    }
+
+    res.status(200).json(form);
+  } catch (error) {
+    console.error("Error fetching form:", error);
+    res
+      .status(500)
+      .json({ message: "Internal server error" });
+  }
+};
+
 const createForm = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -117,4 +142,5 @@ module.exports = {
   getFormsByProjectId,
   createForm,
   deleteForm,
+  getFormById,
 };

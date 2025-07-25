@@ -4,6 +4,7 @@ import "./FormCard.css";
 import { useRef, useState } from "react";
 import DropdownMenu from "../dropdownMenu/DropdownMenu";
 import { useForms } from "../../context/FormContext";
+import { Link } from "react-router-dom";
 const FormCard = ({ form, draft }) => {
   const { deleteForm } = useForms();
   const [isDropdownOpen, setIsDropdownOpen] =
@@ -52,12 +53,17 @@ const FormCard = ({ form, draft }) => {
           <p className='project-title'>{form.title}</p>
         )}
       </div>
-      <div className='form-tab-body'>
-        <RiEdit2Fill
-          className='form-tab-icon'
-          size={50}
-        />
-      </div>
+      <Link
+        className='form-link'
+        to={`/form-page/${form._id}`}
+      >
+        <div className='form-tab-body'>
+          <RiEdit2Fill
+            className='form-tab-icon'
+            size={50}
+          />
+        </div>
+      </Link>
       <div
         className={`form-tab-footer ${
           draft ? "no-analysis" : ""

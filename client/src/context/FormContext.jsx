@@ -5,6 +5,7 @@ const FormContext = createContext();
 export const FormsProvider = ({ children }) => {
   const [forms, setForms] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [formByID, setFormById] = useState({});
 
   const fetchForms = async (projectId) => {
     try {
@@ -23,6 +24,26 @@ export const FormsProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  const fetchFormsById = async (formId) => {
+    try {
+      setLoading(true);
+      const res = await fetch(
+        `http://localhost:3000/api/form/get-form/${formId}`,
+        {
+          credentials: "include",
+        }
+      );
+      const data = await res.json();
+      setFormById(data);
+    } catch (err) {
+      console.error("Failed to fetch forms", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  console.log(formByID);
 
   const createFormsInsideProject = async (projectId) => {
     try {
@@ -89,6 +110,8 @@ export const FormsProvider = ({ children }) => {
         fetchForms,
         createFormsInsideProject,
         deleteForm,
+        formByID,
+        fetchFormsById,
       }}
     >
       {children}

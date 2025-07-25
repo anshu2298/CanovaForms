@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import DropdownMenu from "../dropdownMenu/DropdownMenu";
 import { Link } from "react-router-dom";
 import { useProjects } from "../../context/ProjectContext";
+import ShareModal from "../shareModal/ShareModal";
 function ProjectCard({ project }) {
   const { deleteProject, updateProject } = useProjects();
   const [isDropdownOpen, setIsDropdownOpen] =
@@ -13,6 +14,7 @@ function ProjectCard({ project }) {
   const [editedName, setEditedName] = useState(
     project.name
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const menuButtonRef = useRef(null);
 
   const handleMenuClick = (e) => {
@@ -75,10 +77,17 @@ function ProjectCard({ project }) {
                   deleteProject(id);
                 } else if (actionId === "rename") {
                   setIsRenaming(true);
+                } else if (actionId === "share") {
+                  setIsModalOpen(true);
+                  setIsDropdownOpen(!isDropdownOpen);
                 }
               }}
             />
           )}
+          <ShareModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
         </div>
       </div>
     </div>

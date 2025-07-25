@@ -2,19 +2,59 @@ import "./FormToolbar.css";
 import { IoMdAdd } from "react-icons/io";
 import { ImParagraphLeft } from "react-icons/im";
 import { CiImageOn } from "react-icons/ci";
-import { RxVideo } from "react-icons/rx";
-import { RxSection } from "react-icons/rx";
+import { RxVideo, RxSection } from "react-icons/rx";
 import { LiaClipboardListSolid } from "react-icons/lia";
-function FormToolbar({
-  backgroundColor,
-  sectionColor,
-  onBackgroundColorChange,
-  onSectionColorChange,
-  backgroundOpacity,
-  sectionOpacity,
-  onBackgroundOpacityChange,
-  onSectionOpacityChange,
-}) {
+import { useFormCreation } from "../../context/FormCreationContext";
+
+function FormToolbar({ onAddSection }) {
+  const {
+    activePage,
+    backgroundColor,
+    backgroundOpacity,
+    setBackgroundForActivePage,
+    sectionColor,
+    sectionOpacity,
+    setSectionColor,
+    setSectionOpacity,
+    setSectionColorById,
+  } = useFormCreation();
+
+  const handleBackgroundColorChange = (color) => {
+    setBackgroundForActivePage(color, backgroundOpacity);
+  };
+
+  const handleBackgroundOpacityChange = (opacity) => {
+    setBackgroundForActivePage(backgroundColor, opacity);
+  };
+
+  const getLastSectionId = () => {
+    const lastSection = activePage?.sections?.slice(-1)[0];
+    return lastSection?.id;
+  };
+
+  const handleSectionColorChange = (color) => {
+    setSectionColor(color);
+    const sectionId = getLastSectionId();
+    if (sectionId)
+      setSectionColorById(sectionId, color, sectionOpacity);
+  };
+
+  const handleSectionOpacityChange = (opacity) => {
+    setSectionOpacity(opacity);
+    const sectionId = getLastSectionId();
+    if (sectionId)
+      setSectionColorById(
+        sectionId,
+        sectionColor,
+        Number(opacity)
+      );
+  };
+
+  const handleToolbarClick = (itemId) => {
+    if (itemId === "sections") onAddSection?.();
+    else console.log(`${itemId} clicked`);
+  };
+
   const toolbarItems = [
     {
       id: "question",
@@ -39,14 +79,10 @@ function FormToolbar({
     { id: "video", label: "Add Video", icon: <RxVideo /> },
     {
       id: "sections",
-      label: "Add Sections",
+      label: "Add Section",
       icon: <RxSection />,
     },
   ];
-
-  const handleToolbarClick = (itemId) => {
-    console.log(`${itemId} clicked`);
-  };
 
   return (
     <div className='form-toolbar'>
@@ -72,35 +108,34 @@ function FormToolbar({
           <label className='color-label'>
             Background Color
           </label>
-
           <div className='color-input-group'>
-            <>
-              <div
-                className='color-preview'
-                style={{
-                  backgroundColor: backgroundColor,
-                  opacity: backgroundOpacity / 100,
-                }}
-              ></div>
-              <input
-                name='color-input'
-                type='text'
-                value={backgroundColor}
-                onChange={(e) =>
-                  onBackgroundColorChange(e.target.value)
-                }
-                className='color-input'
-              />
-            </>
+            <div
+              className='color-preview'
+              style={{
+                backgroundColor: backgroundColor,
+                opacity: backgroundOpacity / 100,
+              }}
+            ></div>
+            <input
+              name='color-input'
+              type='text'
+              value={backgroundColor}
+              onChange={(e) =>
+                handleBackgroundColorChange(e.target.value)
+              }
+              className='color-input'
+            />
             <input
               type='number'
               min='0'
               max='100'
               name='opacity-input'
-              className='opacity-input '
+              className='opacity-input'
               value={backgroundOpacity}
               onChange={(e) =>
-                onBackgroundOpacityChange(e.target.value)
+                handleBackgroundOpacityChange(
+                  e.target.value
+                )
               }
             />
           </div>
@@ -121,22 +156,23 @@ function FormToolbar({
             <input
               type='text'
               value={sectionColor}
-              onChange={(e) =>
-                onSectionColorChange(e.target.value)
-              }
+              onChange={(e) => {
+                setSectionColor(e.target.value);
+                handleSectionColorChange(e.target.value);
+              }}
               className='color-input'
             />
-
             <input
               type='number'
               min='0'
               max='100'
               name='opacity-input'
-              className='opacity-input '
+              className='opacity-input'
               value={sectionOpacity}
-              onChange={(e) =>
-                onSectionOpacityChange(e.target.value)
-              }
+              onChange={(e) => {
+                setSectionOpacity(e.target.value);
+                handleSectionOpacityChange(e.target.value);
+              }}
             />
           </div>
         </div>

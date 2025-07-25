@@ -1,16 +1,15 @@
-import { useState } from "react";
 import "./FormCanvas.css";
 import FormToolbar from "../formToolbar/FormToolbar";
+import Section from "../section/Section";
+import { useFormCreation } from "../../context/FormCreationContext";
 
-function FormCanvas({ title, onTitleChange }) {
-  const [backgroundColor, setBackgroundColor] =
-    useState("#B6B6B6");
-  const [sectionColor, setSectionColor] =
-    useState("#B6B6B6");
+function FormCanvas({
+  title,
+  onTitleChange,
+  onAddSection,
+}) {
+  const { activePage } = useFormCreation();
 
-  const [backgroundOpacity, setBackgroundOpacity] =
-    useState(100);
-  const [sectionOpacity, setSectionOpacity] = useState(100);
   return (
     <div className='form-canvas'>
       <div className='canvas-header'>
@@ -27,25 +26,32 @@ function FormCanvas({ title, onTitleChange }) {
       </div>
 
       <div className='canvas-content'>
-        <div className='canvas-workspace'>
-          {/* This is where form elements would be dropped and edited */}
-          <div className='empty-canvas'>
-            <p>
-              Drop form elements here to start building your
-              form
-            </p>
-          </div>
+        <div
+          className='canvas-workspace'
+          style={{
+            backgroundColor:
+              activePage?.backgroundColor || "#ffffff",
+            opacity:
+              (activePage?.backgroundOpacity ?? 100) / 100,
+          }}
+        >
+          {activePage?.sections?.length > 0 ? (
+            activePage.sections.map((section) => (
+              <Section
+                key={section.id}
+                section={section}
+              />
+            ))
+          ) : (
+            <div className='empty-canvas'>
+              <p>
+                Drop form elements here to start building
+                your form
+              </p>
+            </div>
+          )}
         </div>
-        <FormToolbar
-          backgroundColor={backgroundColor}
-          sectionColor={sectionColor}
-          onBackgroundColorChange={setBackgroundColor}
-          onSectionColorChange={setSectionColor}
-          backgroundOpacity={backgroundOpacity}
-          sectionOpacity={sectionOpacity}
-          onBackgroundOpacityChange={setBackgroundOpacity}
-          onSectionOpacityChange={setSectionOpacity}
-        />
+        <FormToolbar onAddSection={onAddSection} />
       </div>
     </div>
   );

@@ -10,12 +10,11 @@ function BuildFormPage() {
   const { formId } = useParams();
   const {
     pages,
-    addNewPage,
     setActivePage,
     title,
     setFormTitle,
     addSectionToActivePage,
-    activePage,
+    createPageInForm,
     initializeFormState,
   } = useFormCreation();
 
@@ -28,6 +27,7 @@ function BuildFormPage() {
   useEffect(() => {
     if (formByID?._id) {
       initializeFormState(formByID);
+      // console.log(formByID);
     }
   }, [formByID]);
 
@@ -35,7 +35,7 @@ function BuildFormPage() {
     <div className='form-builder'>
       <FormSidebar
         pages={pages}
-        onAddPage={addNewPage}
+        onAddPage={() => createPageInForm(formId)}
         onSelectPage={setActivePage}
       />
       <FormCanvas

@@ -1,9 +1,15 @@
-import { useNavigate } from "react-router-dom";
 import "./FormSidebar.css";
+import { useNavigate, useParams } from "react-router-dom";
 import { LuAtom } from "react-icons/lu";
 import { IoPerson } from "react-icons/io5";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { PiLineVerticalLight } from "react-icons/pi";
+import { useFormCreation } from "../../context/FormCreationContext";
+
 function FormSidebar({ pages, onAddPage, onSelectPage }) {
   const navigate = useNavigate();
+  const { formId } = useParams();
+  const { deletePageFromForm } = useFormCreation();
   return (
     <div className='form-sidebar'>
       <div className='sidebar-header'>
@@ -20,17 +26,34 @@ function FormSidebar({ pages, onAddPage, onSelectPage }) {
 
       <div className='pages-section'>
         <div className='pages-list'>
-          {pages.map((page) => (
-            <div
-              key={page.id}
-              className={`page-item ${
-                page.active ? "active" : ""
-              }`}
-              onClick={() => onSelectPage(page.id)}
-            >
-              {page.name}
-            </div>
-          ))}
+          {pages.map((page, index) => {
+            return (
+              <div
+                key={page._id}
+                className={`page-item ${
+                  page.active ? "active" : ""
+                }`}
+              >
+                <p
+                  onClick={() => onSelectPage(page._id)}
+                  className='page-name'
+                >{`Page ${String(index + 1).padStart(
+                  2,
+                  "0"
+                )}`}</p>
+                <PiLineVerticalLight />
+                <RiDeleteBin6Line
+                  onClick={() =>
+                    deletePageFromForm(formId, page._id)
+                  }
+                  size={20}
+                  className={`delete-icon ${
+                    page.active ? "active" : ""
+                  }`}
+                />
+              </div>
+            );
+          })}
         </div>
 
         <button

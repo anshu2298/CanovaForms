@@ -1,4 +1,6 @@
 import { createContext, useContext, useState } from "react";
+import { useForms } from "./FormContext";
+import { toast } from "react-toastify";
 
 const FormCreationContext = createContext();
 
@@ -10,15 +12,17 @@ export const FormCreationProvider = ({ children }) => {
     title: "Untitled Form",
     pages: [
       {
-        id: "page-01",
-        name: "Page 01",
+        id: "",
+        name: "",
         active: true,
-        backgroundColor: "#B6B6B6",
+        backgroundColor: "",
         backgroundOpacity: 100,
         sections: [],
       },
     ],
   });
+
+  const { fetchFormsById } = useForms();
 
   const [sectionColor, setSectionColor] =
     useState("#B6B6B6");
@@ -128,29 +132,77 @@ export const FormCreationProvider = ({ children }) => {
     let updatedPages = formFromDB.pages;
 
     if (!updatedPages || updatedPages.length === 0) {
-      updatedPages = [
-        {
-          id: "page-01",
-          name: "Page 01",
-          active: true,
-          backgroundColor: "#B6B6B6",
-          backgroundOpacity: 100,
-          sections: [],
-        },
-      ];
+      updatedPages = [];
     } else {
       updatedPages = updatedPages.map((page, index) => ({
         ...page,
-        backgroundColor: page.backgroundColor || "#B6B6B6",
-        backgroundOpacity: page.backgroundOpacity ?? 100,
         active: page.active ?? index === 0,
       }));
+      console.log(updatedPages);
     }
-
     setFormState({
       title: formFromDB.title || "Untitled Form",
       pages: updatedPages,
     });
+  };
+
+  // Create New page in the Form.
+  const createPageInForm = async (formId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/form/${formId}/add-page`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(
+          error.message || "Failed to create page"
+        );
+      }
+
+      const data = await response.json();
+      await fetchFormsById(formId);
+      toast.success("New page added.");
+      return data;
+    } catch (err) {
+      console.error("Error creating page:", err.message);
+      toast.error("Failed to add New page !");
+      throw err;
+    }
+  };
+
+  // Delete Page from a Form.
+  const deletePageFromForm = async (formId, pageId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/form/${formId}/delete-page/${pageId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(
+          error.message || "Failed to delete page"
+        );
+      }
+
+      const data = await response.json();
+      await fetchFormsById(formId);
+      toast.success("Page Deleted.");
+      return data;
+    } catch (err) {
+      console.error("Error deleting page:", err.message);
+      toast.error("Error deleting page");
+      throw err;
+    }
   };
 
   return (
@@ -169,6 +221,8 @@ export const FormCreationProvider = ({ children }) => {
         sectionOpacity,
         setSectionColor,
         setSectionOpacity,
+        createPageInForm,
+        deletePageFromForm,
       }}
     >
       {children}

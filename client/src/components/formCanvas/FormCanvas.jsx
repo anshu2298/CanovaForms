@@ -30,7 +30,7 @@ function FormCanvas({
           className='canvas-workspace'
           style={{
             backgroundColor:
-              activePage?.backgroundColor || "#ffffff",
+              activePage?.backgroundColor || "#B6B6B6",
             opacity:
               (activePage?.backgroundOpacity ?? 100) / 100,
           }}

@@ -112,14 +112,16 @@ function FormToolbar({ onAddSection }) {
             <div
               className='color-preview'
               style={{
-                backgroundColor: backgroundColor,
-                opacity: backgroundOpacity / 100,
+                backgroundColor:
+                  activePage?.backgroundColor,
+                opacity:
+                  activePage?.backgroundOpacity / 100,
               }}
             ></div>
             <input
               name='color-input'
               type='text'
-              value={backgroundColor}
+              value={activePage.backgroundColor}
               onChange={(e) =>
                 handleBackgroundColorChange(e.target.value)
               }

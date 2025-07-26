@@ -6,6 +6,8 @@ const {
   createForm,
   deleteForm,
   getFormById,
+  addPageToForm,
+  deletePageFromForm,
 } = require("../controllers/formController");
 
 formsRouter.get(
@@ -13,7 +15,11 @@ formsRouter.get(
   userAuth,
   getFormsByProjectId
 );
-
+formsRouter.delete(
+  "/:formId/delete-page/:pageId",
+  deletePageFromForm
+);
+formsRouter.post("/:formId/add-page", addPageToForm);
 formsRouter.get("/get-form/:formId", getFormById);
 formsRouter.post("/create-form", userAuth, createForm);
 formsRouter.delete("/delete/:formId", userAuth, deleteForm);

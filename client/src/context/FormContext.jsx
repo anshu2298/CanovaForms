@@ -43,8 +43,6 @@ export const FormsProvider = ({ children }) => {
     }
   };
 
-  console.log(formByID);
-
   const createFormsInsideProject = async (projectId) => {
     try {
       const res = await fetch(

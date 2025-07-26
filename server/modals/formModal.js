@@ -12,8 +12,11 @@ const QuestionSchema = new Schema({
 
 // Section Schema
 const SectionSchema = new Schema({
-  backgroundColor: { type: String, default: "#ffffff" },
-  backgroundOpacity: { type: Number, default: 100 },
+  sectionBackgroundColor: {
+    type: String,
+    default: "#ffffff",
+  },
+  sectionBackgroundOpacity: { type: Number, default: 100 },
   questions: [QuestionSchema],
 });
 
@@ -24,14 +27,14 @@ const PageSchema = new Schema({
     required: true,
     default: "Untitled Page",
   },
-  backgroundColor: { type: String, default: "#ffffff" },
-  backgroundOpacity: { type: Number, default: 100 },
+  pageBackgroundColor: { type: String, default: "#ffffff" },
+  pageBackgroundOpacity: { type: Number, default: 100 },
   sections: {
     type: [SectionSchema],
     default: () => [
       {
-        backgroundColor: "#ffffff",
-        backgroundOpacity: 100,
+        pageBackgroundColor: "#ffffff",
+        pageBackgroundOpacity: 100,
         questions: [],
       },
     ],
@@ -56,13 +59,13 @@ const FormSchema = new Schema(
       type: [PageSchema],
       default: () => [
         {
-          name: "Page 1",
-          backgroundColor: "#ffffff",
-          backgroundOpacity: 100,
+          name: "Page 01",
+          pageBackgroundColor: "#ffffff",
+          pageBackgroundOpacity: 100,
           sections: [
             {
-              backgroundColor: "#ffffff",
-              backgroundOpacity: 100,
+              sectionBackgroundColor: "#ffffff",
+              sectionBackgroundOpacity: 100,
               questions: [],
             },
           ],

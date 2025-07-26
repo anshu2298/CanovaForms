@@ -22,11 +22,33 @@
   padding: 12px 16px;
   margin-bottom: 8px;
   border-radius: 8px;
-  cursor: pointer;
   font-size: 16px;
   color: #000;
   transition: all 0.2s ease;
   font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.delete-icon {
+  color: #a4afbb;
+  padding: 1px;
+  cursor: pointer;
+}
+
+.delete-icon.active {
+  color: #000;
+  background-color: #dce0e4;
+}
+
+.delete-icon:hover {
+  color: #f32105;
+}
+
+.page-name {
+  display: inline-block;
+  cursor: pointer;
 }
 
 .page-item:hover {

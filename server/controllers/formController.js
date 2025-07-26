@@ -24,6 +24,7 @@ const getFormsByProjectId = async (req, res) => {
   }
 };
 
+// get form by formId
 const getFormById = async (req, res) => {
   const { formId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(formId)) {
@@ -49,6 +50,7 @@ const getFormById = async (req, res) => {
   }
 };
 
+//create a form
 const createForm = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -84,6 +86,89 @@ const createForm = async (req, res) => {
   }
 };
 
+// Add a new page to a form
+const addPageToForm = async (req, res) => {
+  const { formId } = req.params;
+
+  try {
+    const form = await Form.findById(formId);
+    if (!form) {
+      return res
+        .status(404)
+        .json({ message: "Form not found" });
+    }
+
+    const newPageNumber = form.pages.length + 1;
+
+    const newPage = {
+      name: `Page ${String(newPageNumber).padStart(
+        2,
+        "0"
+      )}`,
+      pageBackgroundColor: "#ffffff",
+      pageBackgroundOpacity: 100,
+      sections: [
+        {
+          sectionBackgroundColor: "#ffffff",
+          sectionBackgroundOpacity: 100,
+          questions: [],
+        },
+      ],
+    };
+
+    form.pages.push(newPage);
+    await form.save();
+
+    // Return the newly added page
+    res.status(200).json({
+      message: "Page added successfully",
+      newPage: form.pages[form.pages.length - 1], // last added
+    });
+  } catch (err) {
+    console.error("Error adding page:", err);
+    res
+      .status(500)
+      .json({ message: "Server error while adding page" });
+  }
+};
+
+//Delete a page from a form
+const deletePageFromForm = async (req, res) => {
+  const { formId, pageId } = req.params;
+
+  try {
+    const form = await Form.findById(formId);
+    if (!form) {
+      return res
+        .status(404)
+        .json({ message: "Form not found" });
+    }
+
+    const initialLength = form.pages.length;
+    form.pages = form.pages.filter(
+      (page) => page._id.toString() !== pageId
+    );
+
+    if (form.pages.length === initialLength) {
+      return res
+        .status(404)
+        .json({ message: "Page not found in form" });
+    }
+
+    await form.save();
+    res.status(200).json({
+      message: "Page deleted successfully",
+      updatedForm: form,
+    });
+  } catch (err) {
+    console.error("Error deleting page:", err);
+    res.status(500).json({
+      message: "Server error while deleting page",
+    });
+  }
+};
+
+//delete a form
 const deleteForm = async (req, res) => {
   const { formId } = req.params;
   const session = await mongoose.startSession();
@@ -143,4 +228,6 @@ module.exports = {
   createForm,
   deleteForm,
   getFormById,
+  addPageToForm,
+  deletePageFromForm,
 };

@@ -8,13 +8,18 @@ function Header() {
   const currentPath = location.pathname.split("/").pop();
   return (
     <div className='dashboard_header'>
-      {currentPath === "projects" ? (
+      {currentPath === "projects" ||
+      currentPath === "forms" ? (
         <div className='search-container'>
           <div className='search-bar'>
             <input
               type='text'
               className='search-input'
-              placeholder='Seach projects...'
+              placeholder={
+                currentPath === "projects"
+                  ? "Search Projects..."
+                  : "Search Forms..."
+              }
               value={searchQuery}
               onChange={(e) =>
                 setSearchQuery(e.target.value)

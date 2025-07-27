@@ -9,7 +9,6 @@ function FormCanvas({
   onAddSection,
 }) {
   const { activePage } = useFormCreation();
-
   return (
     <div className='form-canvas'>
       <div className='canvas-header'>
@@ -30,9 +29,10 @@ function FormCanvas({
           className='canvas-workspace'
           style={{
             backgroundColor:
-              activePage?.backgroundColor || "#B6B6B6",
+              activePage?.pageBackgroundColor,
             opacity:
-              (activePage?.backgroundOpacity ?? 100) / 100,
+              (activePage?.pageBackgroundOpacity || 1) /
+              100,
           }}
         >
           {activePage?.sections?.length > 0 ? (
@@ -40,13 +40,14 @@ function FormCanvas({
               <Section
                 key={section.id}
                 section={section}
+                pageId={activePage._id}
               />
             ))
           ) : (
             <div className='empty-canvas'>
               <p>
-                Drop form elements here to start building
-                your form
+                Add a New Section to start Building your
+                Form.
               </p>
             </div>
           )}

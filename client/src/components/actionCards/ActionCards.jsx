@@ -4,9 +4,11 @@ import { IoFolderOutline } from "react-icons/io5";
 import { RiEdit2Fill } from "react-icons/ri";
 import CreateProjectModal from "../createProjectModal/CreateProjectModal";
 import { useNavigate } from "react-router-dom";
+import { useForms } from "../../context/FormContext";
 function ActionCards() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { createStandaloneForm } = useForms();
   const actions = [
     {
       id: "start-scratch",
@@ -20,7 +22,7 @@ function ActionCards() {
       title: "Create Form",
       description: "Create your first Form now",
       icon: <RiEdit2Fill />,
-      onClick: () => navigate("/form-page"),
+      onClick: () => createStandaloneForm(),
     },
   ];
 

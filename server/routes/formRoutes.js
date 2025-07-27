@@ -8,8 +8,10 @@ const {
   getFormById,
   addPageToForm,
   deletePageFromForm,
+  getAllForms,
 } = require("../controllers/formController");
 
+formsRouter.get("/all-forms", getAllForms);
 formsRouter.get(
   "/:projectId",
   userAuth,

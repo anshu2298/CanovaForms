@@ -24,11 +24,18 @@ export const FormCreationProvider = ({ children }) => {
 
   const { fetchFormsById } = useForms();
 
+  const [pageColor, setPageColor] = useState("#B6B6B6");
+  const [pageOpacity, setPageOpacity] = useState(100);
+
   const [sectionColor, setSectionColor] =
-    useState("#B6B6B6");
+    useState("#ffffff");
   const [sectionOpacity, setSectionOpacity] = useState(100);
 
   const activePage = formState.pages.find((p) => p.active);
+
+  const activeSection = activePage?.sections.find(
+    (s) => s.active
+  );
 
   const setFormTitle = (title) => {
     setFormState((prev) => ({ ...prev, title }));
@@ -39,28 +46,28 @@ export const FormCreationProvider = ({ children }) => {
       ...prev,
       pages: prev.pages.map((page) => ({
         ...page,
-        active: page.id === pageId,
+        active: page._id === pageId,
       })),
     }));
   };
 
-  const addNewPage = () => {
-    const newPageNumber = formState.pages.length + 1;
-    const newPage = {
-      id: `page-${newPageNumber
-        .toString()
-        .padStart(2, "0")}`,
-      name: `Page ${newPageNumber
-        .toString()
-        .padStart(2, "0")}`,
-      active: false,
-      backgroundColor: "#B6B6B6",
-      backgroundOpacity: 100,
-      sections: [],
-    };
+  const setActiveSection = (pageId, sectionId) => {
     setFormState((prev) => ({
       ...prev,
-      pages: [...prev.pages, newPage],
+      pages: prev.pages.map((page) =>
+        page._id === pageId
+          ? {
+              ...page,
+              sections: page.sections.map((section) => ({
+                ...section,
+                active:
+                  section.id === sectionId
+                    ? !section.active
+                    : false,
+              })),
+            }
+          : page
+      ),
     }));
   };
 
@@ -113,15 +120,15 @@ export const FormCreationProvider = ({ children }) => {
     }));
   };
 
-  const setBackgroundForActivePage = (color, opacity) => {
+  const setPageColorById = (pageId, color, opacity) => {
     setFormState((prev) => ({
       ...prev,
       pages: prev.pages.map((page) =>
-        page.active
+        page._id === pageId
           ? {
               ...page,
-              backgroundColor: color,
-              backgroundOpacity: opacity,
+              pageBackgroundColor: color,
+              pageBackgroundOpacity: opacity,
             }
           : page
       ),
@@ -138,7 +145,7 @@ export const FormCreationProvider = ({ children }) => {
         ...page,
         active: page.active ?? index === 0,
       }));
-      console.log(updatedPages);
+      // console.log(updatedPages);
     }
     setFormState({
       title: formFromDB.title || "Untitled Form",
@@ -211,18 +218,23 @@ export const FormCreationProvider = ({ children }) => {
         ...formState,
         activePage,
         setFormTitle,
+        activeSection,
         setActivePage,
-        addNewPage,
-        addSectionToActivePage,
-        setSectionColorById,
-        setBackgroundForActivePage,
+        setActiveSection,
+        createPageInForm,
+        deletePageFromForm,
         initializeFormState,
+        addSectionToActivePage,
         sectionColor,
         sectionOpacity,
         setSectionColor,
         setSectionOpacity,
-        createPageInForm,
-        deletePageFromForm,
+        setSectionColorById,
+        pageColor,
+        pageOpacity,
+        setPageColor,
+        setPageOpacity,
+        setPageColorById,
       }}
     >
       {children}

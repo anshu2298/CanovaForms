@@ -3,7 +3,9 @@ import ProjectCard from "../../../components/projectCard/ProjectCard";
 import { useProjects } from "../../../context/ProjectContext";
 const Projects = () => {
   const { filteredProjects } = useProjects();
-  return (
+  return filteredProjects.length === 0 ? (
+    <p className='fallback-text'>No Projects available.</p>
+  ) : (
     <div className='projects-grid'>
       {filteredProjects.map((project) => {
         return (

@@ -4,15 +4,27 @@
   padding: 16px;
   margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.form-section.active {
   border: black 1px solid;
 }
 
-.section-header h4 {
-  margin: 0 0 12px;
+.section-header {
+  display: flex;
+  align-items: center;
 }
 
 .section-body {
-  background: #f9f9f9;
+  margin-top: 10px;
+  /* background: #f9f9f9; */
   padding: 12px;
   border-radius: 6px;
+}
+.section-header input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+
+  accent-color: #6c63ff;
+  cursor: pointer;
+  margin-right: 8px;
 }

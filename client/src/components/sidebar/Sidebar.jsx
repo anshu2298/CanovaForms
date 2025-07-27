@@ -4,6 +4,7 @@ import { FiHome } from "react-icons/fi";
 import { FaRegFolderClosed } from "react-icons/fa6";
 import { IoBarChartOutline } from "react-icons/io5";
 import { IoPerson } from "react-icons/io5";
+import { MdFormatAlignJustify } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
 
 function Sidebar() {
@@ -27,6 +28,12 @@ function Sidebar() {
       id: "projects",
       label: "Projects",
       icon: <FaRegFolderClosed />,
+      active: false,
+    },
+    {
+      id: "forms",
+      label: "Forms",
+      icon: <MdFormatAlignJustify />,
       active: false,
     },
   ];

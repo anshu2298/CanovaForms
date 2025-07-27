@@ -1,6 +1,6 @@
 .recent-works {
   margin-bottom: 48px;
-  min-height: 400px;
+  min-height: 250px;
 }
 
 .section-title {
@@ -17,4 +17,5 @@
     minmax(200px, 1fr)
   );
   gap: 20px;
+  margin-top: 35px;
 }

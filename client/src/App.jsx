@@ -20,6 +20,7 @@ import RedirectIfAuth from "./utils/RedirectIfAuth";
 import RequireAuth from "./utils/RequiredAuth";
 import ProjectDetailsPage from "./pages/DashboardLayout/ProjectDetailsPage/ProjectDetailsPage";
 import BuildFormPage from "./pages/Forms/BuildFormPage";
+import Forms from "./pages/DashboardLayout/Forms/Forms";
 
 const App = () => {
   const [email, setEmail] = useState("");
@@ -92,6 +93,10 @@ const App = () => {
             path='analysis'
             element={<Analysis />}
           />
+          <Route
+            path='forms'
+            element={<Forms />}
+          />
         </Route>
 
         {/* Form Route */}
@@ -103,6 +108,7 @@ const App = () => {
             </RequireAuth>
           }
         />
+
         {/* Profile route */}
         <Route
           path='/profile'

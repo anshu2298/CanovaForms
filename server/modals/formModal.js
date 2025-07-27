@@ -53,7 +53,6 @@ const FormSchema = new Schema(
     project: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
-      required: true,
     },
     pages: {
       type: [PageSchema],
@@ -62,13 +61,7 @@ const FormSchema = new Schema(
           name: "Page 01",
           pageBackgroundColor: "#ffffff",
           pageBackgroundOpacity: 100,
-          sections: [
-            {
-              sectionBackgroundColor: "#ffffff",
-              sectionBackgroundOpacity: 100,
-              questions: [],
-            },
-          ],
+          sections: [],
         },
       ],
     },

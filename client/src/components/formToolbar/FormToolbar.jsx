@@ -9,45 +9,51 @@ import { useFormCreation } from "../../context/FormCreationContext";
 function FormToolbar({ onAddSection }) {
   const {
     activePage,
-    backgroundColor,
-    backgroundOpacity,
-    setBackgroundForActivePage,
+    activeSection,
     sectionColor,
     sectionOpacity,
     setSectionColor,
     setSectionOpacity,
     setSectionColorById,
+    pageColor,
+    pageOpacity,
+    setPageColor,
+    setPageOpacity,
+    setPageColorById,
   } = useFormCreation();
-
-  const handleBackgroundColorChange = (color) => {
-    setBackgroundForActivePage(color, backgroundOpacity);
-  };
-
-  const handleBackgroundOpacityChange = (opacity) => {
-    setBackgroundForActivePage(backgroundColor, opacity);
-  };
-
-  const getLastSectionId = () => {
-    const lastSection = activePage?.sections?.slice(-1)[0];
-    return lastSection?.id;
-  };
 
   const handleSectionColorChange = (color) => {
     setSectionColor(color);
-    const sectionId = getLastSectionId();
+    const sectionId = activeSection.id;
     if (sectionId)
       setSectionColorById(sectionId, color, sectionOpacity);
   };
 
   const handleSectionOpacityChange = (opacity) => {
     setSectionOpacity(opacity);
-    const sectionId = getLastSectionId();
+    const sectionId = activeSection.id;
     if (sectionId)
       setSectionColorById(
         sectionId,
         sectionColor,
         Number(opacity)
       );
+  };
+
+  const handlePageColorChange = (color) => {
+    setPageColor(color);
+    const pageId = activePage._id;
+    if (pageId) {
+      setPageColorById(pageId, color, pageOpacity);
+    }
+  };
+
+  const handlePageOpacityChange = (opacity) => {
+    setPageOpacity(opacity);
+    const pageId = activePage._id;
+    if (pageId) {
+      setPageColorById(pageId, pageColor, opacity);
+    }
   };
 
   const handleToolbarClick = (itemId) => {
@@ -113,17 +119,18 @@ function FormToolbar({ onAddSection }) {
               className='color-preview'
               style={{
                 backgroundColor:
-                  activePage?.backgroundColor,
+                  activePage?.pageBackgroundColor,
                 opacity:
-                  activePage?.backgroundOpacity / 100,
+                  (activePage?.pageBackgroundOpacity || 1) /
+                  100,
               }}
             ></div>
             <input
               name='color-input'
               type='text'
-              value={activePage.backgroundColor}
+              value={activePage?.pageBackgroundColor}
               onChange={(e) =>
-                handleBackgroundColorChange(e.target.value)
+                handlePageColorChange(e.target.value)
               }
               className='color-input'
             />
@@ -133,11 +140,9 @@ function FormToolbar({ onAddSection }) {
               max='100'
               name='opacity-input'
               className='opacity-input'
-              value={backgroundOpacity}
+              value={activePage?.pageBackgroundOpacity}
               onChange={(e) =>
-                handleBackgroundOpacityChange(
-                  e.target.value
-                )
+                handlePageOpacityChange(e.target.value)
               }
             />
           </div>
@@ -151,13 +156,17 @@ function FormToolbar({ onAddSection }) {
             <div
               className='color-preview'
               style={{
-                backgroundColor: sectionColor,
-                opacity: sectionOpacity / 100,
+                backgroundColor:
+                  activeSection?.backgroundColor,
+                opacity:
+                  (activeSection?.backgroundOpacity || 1) /
+                  100,
               }}
             ></div>
             <input
+              disabled={!activeSection}
               type='text'
-              value={sectionColor}
+              value={activeSection?.backgroundColor || ""}
               onChange={(e) => {
                 setSectionColor(e.target.value);
                 handleSectionColorChange(e.target.value);
@@ -166,11 +175,12 @@ function FormToolbar({ onAddSection }) {
             />
             <input
               type='number'
+              disabled={!activeSection}
               min='0'
               max='100'
               name='opacity-input'
               className='opacity-input'
-              value={sectionOpacity}
+              value={activeSection?.backgroundOpacity || ""}
               onChange={(e) => {
                 setSectionOpacity(e.target.value);
                 handleSectionOpacityChange(e.target.value);

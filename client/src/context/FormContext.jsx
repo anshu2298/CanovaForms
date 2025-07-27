@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
 import { toast } from "react-toastify";
 const FormContext = createContext();
@@ -6,7 +7,10 @@ export const FormsProvider = ({ children }) => {
   const [forms, setForms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formByID, setFormById] = useState({});
-
+  const [allForms, setAllForms] = useState([]);
+  const [standaloneForms, setStandaloneForms] = useState(
+    []
+  );
   const fetchForms = async (projectId) => {
     try {
       setLoading(true);
@@ -25,6 +29,25 @@ export const FormsProvider = ({ children }) => {
     }
   };
 
+  const fetchAllForms = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(
+        "http://localhost:3000/api/form/all-forms",
+        { credentials: "include" }
+      );
+      const data = await res.json();
+      setAllForms(data);
+      setStandaloneForms(
+        data.filter((form) => form.project === null)
+      );
+    } catch (error) {
+      console.error("Failed to fetch forms", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchFormsById = async (formId) => {
     try {
       setLoading(true);
@@ -35,6 +58,7 @@ export const FormsProvider = ({ children }) => {
         }
       );
       const data = await res.json();
+      console.log(data);
       setFormById(data);
     } catch (err) {
       console.error("Failed to fetch forms", err);
@@ -72,6 +96,24 @@ export const FormsProvider = ({ children }) => {
     }
   };
 
+  const createStandaloneForm = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:3000/api/form/create-form",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      const data = await res.json();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const deleteForm = async (formId, projectId) => {
     try {
       console.log("FormId", formId);
@@ -100,6 +142,10 @@ export const FormsProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    fetchAllForms();
+  }, []);
+
   return (
     <FormContext.Provider
       value={{
@@ -110,6 +156,10 @@ export const FormsProvider = ({ children }) => {
         deleteForm,
         formByID,
         fetchFormsById,
+        createStandaloneForm,
+        allForms,
+        standaloneForms,
+        fetchAllForms,
       }}
     >
       {children}

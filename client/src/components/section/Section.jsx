@@ -1,9 +1,15 @@
+import { useFormCreation } from "../../context/FormCreationContext";
+import Question from "../question/Question";
 import "./Section.css";
 
-function Section({ section }) {
+function Section({ section, pageId }) {
+  const { setActiveSection } = useFormCreation();
+
   return (
     <div
-      className='form-section'
+      className={`form-section ${
+        section.active ? "active" : ""
+      }`}
       style={{
         backgroundColor:
           section.backgroundColor || "#ffffff",
@@ -11,6 +17,13 @@ function Section({ section }) {
       }}
     >
       <div className='section-header'>
+        <input
+          type='checkbox'
+          checked={section.active}
+          onChange={() =>
+            setActiveSection(pageId, section.id)
+          }
+        />
         <h4>Section ID: {section.id}</h4>
       </div>
 

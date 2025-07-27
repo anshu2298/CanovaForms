@@ -29,7 +29,7 @@ function FormSidebar({ pages, onAddPage, onSelectPage }) {
           {pages.map((page, index) => {
             return (
               <div
-                key={page._id}
+                key={page._id || index}
                 className={`page-item ${
                   page.active ? "active" : ""
                 }`}
@@ -55,7 +55,6 @@ function FormSidebar({ pages, onAddPage, onSelectPage }) {
             );
           })}
         </div>
-
         <button
           className='add-page-btn'
           onClick={onAddPage}

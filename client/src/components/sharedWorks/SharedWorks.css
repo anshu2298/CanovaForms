@@ -1,6 +1,5 @@
 .shared-works {
   margin-bottom: 48px;
-  min-height: 400px;
 }
 
 .section-title {
@@ -8,6 +7,8 @@
   font-weight: 600;
   color: #333;
   margin-bottom: 20px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 5px;
 }
 
 .works-grid {
@@ -17,4 +18,5 @@
     minmax(200px, 1fr)
   );
   gap: 20px;
+  margin-top: 35px;
 }

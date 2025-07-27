@@ -24,6 +24,19 @@ const getFormsByProjectId = async (req, res) => {
   }
 };
 
+//get standAlone Forms.
+const getAllForms = async (req, res) => {
+  try {
+    const forms = await Form.find();
+    res.status(200).json(forms);
+  } catch (error) {
+    console.error("Error fetching forms:", error);
+    res
+      .status(500)
+      .json({ message: "Internal server error" });
+  }
+};
+
 // get form by formId
 const getFormById = async (req, res) => {
   const { formId } = req.params;
@@ -107,13 +120,7 @@ const addPageToForm = async (req, res) => {
       )}`,
       pageBackgroundColor: "#ffffff",
       pageBackgroundOpacity: 100,
-      sections: [
-        {
-          sectionBackgroundColor: "#ffffff",
-          sectionBackgroundOpacity: 100,
-          questions: [],
-        },
-      ],
+      sections: [],
     };
 
     form.pages.push(newPage);
@@ -230,4 +237,5 @@ module.exports = {
   getFormById,
   addPageToForm,
   deletePageFromForm,
+  getAllForms,
 };

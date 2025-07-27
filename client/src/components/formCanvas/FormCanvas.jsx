@@ -3,11 +3,7 @@ import FormToolbar from "../formToolbar/FormToolbar";
 import Section from "../section/Section";
 import { useFormCreation } from "../../context/FormCreationContext";
 
-function FormCanvas({
-  title,
-  onTitleChange,
-  onAddSection,
-}) {
+function FormCanvas({ title, onTitleChange }) {
   const { activePage } = useFormCreation();
   return (
     <div className='form-canvas'>
@@ -52,7 +48,7 @@ function FormCanvas({
             </div>
           )}
         </div>
-        <FormToolbar onAddSection={onAddSection} />
+        <FormToolbar />
       </div>
     </div>
   );

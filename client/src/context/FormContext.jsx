@@ -58,7 +58,6 @@ export const FormsProvider = ({ children }) => {
         }
       );
       const data = await res.json();
-      console.log(data);
       setFormById(data);
     } catch (err) {
       console.error("Failed to fetch forms", err);
@@ -96,7 +95,7 @@ export const FormsProvider = ({ children }) => {
     }
   };
 
-  const createStandaloneForm = async () => {
+  const createStandaloneForm = async (navigate) => {
     try {
       const res = await fetch(
         "http://localhost:3000/api/form/create-form",
@@ -109,8 +108,44 @@ export const FormsProvider = ({ children }) => {
         }
       );
       const data = await res.json();
+      navigate(`/form-page/${data._id}`);
+      fetchAllForms();
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const updateForms = async (formId, title, projectId) => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/form/update-form/${formId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ title }), // only send name
+        }
+      );
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Form name updated.");
+        fetchAllForms();
+        if (projectId) {
+          await fetchForms(projectId);
+        }
+      } else {
+        toast.error(data.message || "Update failed");
+      }
+    } catch (error) {
+      console.error("Error updating form name:", error);
+      toast.error(
+        "Something went wrong while updating form name."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -131,10 +166,10 @@ export const FormsProvider = ({ children }) => {
           data.message || "Failed to delete Form"
         );
       }
-      // Refresh the projects list
       if (projectId) {
         await fetchForms(projectId);
       }
+      fetchAllForms();
       toast.success("Form deleted successfully!");
     } catch (err) {
       console.log("Delete Project Error:", err);
@@ -160,6 +195,7 @@ export const FormsProvider = ({ children }) => {
         allForms,
         standaloneForms,
         fetchAllForms,
+        updateForms,
       }}
     >
       {children}

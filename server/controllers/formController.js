@@ -24,7 +24,7 @@ const getFormsByProjectId = async (req, res) => {
   }
 };
 
-//get standAlone Forms.
+//get All Forms.
 const getAllForms = async (req, res) => {
   try {
     const forms = await Form.find();
@@ -93,6 +93,35 @@ const createForm = async (req, res) => {
     return res.status(201).json(newForm);
   } catch (error) {
     console.error("Create Form Error:", error);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error" });
+  }
+};
+
+//update a form.
+const updateForm = async (req, res) => {
+  try {
+    const { formId } = req.params;
+    const { title } = req.body;
+
+    const form = await Form.findByIdAndUpdate(
+      formId,
+      {
+        ...(title && { title }),
+        updatedAt: new Date(),
+      },
+      { new: true }
+    );
+
+    if (!form)
+      return res
+        .status(404)
+        .json({ message: "Form not found" });
+
+    return res.status(200).json(form);
+  } catch (error) {
+    console.log("Update Form Error:", error);
     res
       .status(500)
       .json({ message: "Internal Server Error" });
@@ -238,4 +267,5 @@ module.exports = {
   addPageToForm,
   deletePageFromForm,
   getAllForms,
+  updateForm,
 };

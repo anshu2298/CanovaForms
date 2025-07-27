@@ -22,7 +22,7 @@ function ActionCards() {
       title: "Create Form",
       description: "Create your first Form now",
       icon: <RiEdit2Fill />,
-      onClick: () => createStandaloneForm(),
+      onClick: () => createStandaloneForm(navigate),
     },
   ];
 

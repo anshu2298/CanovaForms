@@ -1,5 +1,6 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState } from "react";
-import { useForms } from "./FormContext";
+// import { useForms } from "./FormContext";
 import { toast } from "react-toastify";
 
 const FormCreationContext = createContext();
@@ -22,7 +23,7 @@ export const FormCreationProvider = ({ children }) => {
     ],
   });
 
-  const { fetchFormsById } = useForms();
+  // const { fetchFormsById } = useForms();
 
   const [pageColor, setPageColor] = useState("#B6B6B6");
   const [pageOpacity, setPageOpacity] = useState(100);
@@ -76,7 +77,7 @@ export const FormCreationProvider = ({ children }) => {
       id: `section-${Date.now()}`,
       backgroundColor: sectionColor,
       backgroundOpacity: sectionOpacity,
-      questions: [],
+      content: [],
     };
     setFormState((prev) => ({
       ...prev,
@@ -92,6 +93,7 @@ export const FormCreationProvider = ({ children }) => {
           : page
       ),
     }));
+    toast.success("Section Added.");
   };
 
   const setSectionColorById = (
@@ -111,6 +113,158 @@ export const FormCreationProvider = ({ children }) => {
                       ...section,
                       backgroundColor: color,
                       backgroundOpacity: opacity,
+                    }
+                  : section
+              ),
+            }
+          : page
+      ),
+    }));
+  };
+
+  const deleteSectionFromActivePage = (sectionId) => {
+    setFormState((prev) => {
+      return {
+        ...prev,
+        pages: prev.pages.map((page) =>
+          page.active
+            ? {
+                ...page,
+                sections: page.sections.filter(
+                  (section) => section.id !== sectionId
+                ),
+              }
+            : page
+        ),
+      };
+    });
+
+    toast.success("Section deleted.");
+  };
+
+  const addQuestionToActiveSection = () => {
+    const newQuestionBlock = {
+      id: `question-${Date.now()}`,
+      type: "question",
+      data: {
+        questionType: "short-answer", // default subtype
+        label: "Untitled Question",
+        required: false,
+        options: [],
+      },
+    };
+
+    setFormState((prev) => ({
+      ...prev,
+      pages: prev.pages.map((page) =>
+        page.active
+          ? {
+              ...page,
+              sections: page.sections.map((section) =>
+                section.active
+                  ? {
+                      ...section,
+                      content: [
+                        ...(section.content ?? []),
+                        newQuestionBlock,
+                      ],
+                    }
+                  : section
+              ),
+            }
+          : page
+      ),
+    }));
+  };
+
+  const addTextBlockToActiveSection = () => {
+    const newTextBlock = {
+      id: `text-${Date.now()}`,
+      type: "text",
+      data: {
+        text: "",
+      },
+    };
+
+    setFormState((prev) => ({
+      ...prev,
+      pages: prev.pages.map((page) =>
+        page.active
+          ? {
+              ...page,
+              sections: page.sections.map((section) =>
+                section.active
+                  ? {
+                      ...section,
+                      content: [
+                        ...(section.content ?? []), // ensure array
+                        newTextBlock,
+                      ],
+                    }
+                  : section
+              ),
+            }
+          : page
+      ),
+    }));
+  };
+
+  const addImageBlockToActiveSection = () => {
+    const newImageBlock = {
+      id: `image-${Date.now()}`,
+      type: "image",
+      data: {
+        url: "", // initially blank; update via UI later
+        alt: "", // optional alt text
+      },
+    };
+
+    setFormState((prev) => ({
+      ...prev,
+      pages: prev.pages.map((page) =>
+        page.active
+          ? {
+              ...page,
+              sections: page.sections.map((section) =>
+                section.active
+                  ? {
+                      ...section,
+                      content: [
+                        ...(section.content ?? []),
+                        newImageBlock,
+                      ],
+                    }
+                  : section
+              ),
+            }
+          : page
+      ),
+    }));
+  };
+
+  const addVideoBlockToActiveSection = () => {
+    const newVideoBlock = {
+      id: `video-${Date.now()}`,
+      type: "video",
+      data: {
+        url: "", // Empty initially
+      },
+    };
+
+    setFormState((prev) => ({
+      ...prev,
+      pages: prev.pages.map((page) =>
+        page.active
+          ? {
+              ...page,
+              sections: page.sections.map((section) =>
+                section.active
+                  ? {
+                      ...section,
+                      content: [
+                        ...(section.content || []),
+                        newVideoBlock,
+                      ],
                     }
                   : section
               ),
@@ -173,10 +327,19 @@ export const FormCreationProvider = ({ children }) => {
         );
       }
 
-      const data = await response.json();
-      await fetchFormsById(formId);
+      const newPage = await response.json();
+      setFormState((prev) => ({
+        ...prev,
+        pages: [
+          ...prev.pages.map((page) => ({
+            ...page,
+            active: false,
+          })),
+          { ...newPage, sections: [], active: true }, // add sections and active flag
+        ],
+      }));
       toast.success("New page added.");
-      return data;
+      return newPage;
     } catch (err) {
       console.error("Error creating page:", err.message);
       toast.error("Failed to add New page !");
@@ -201,10 +364,20 @@ export const FormCreationProvider = ({ children }) => {
         );
       }
 
-      const data = await response.json();
-      await fetchFormsById(formId);
+      setFormState((prev) => {
+        const updatedPages = prev.pages
+          .filter((page) => page._id !== pageId)
+          .map((page, index) => ({
+            ...page,
+            active: index === 0,
+          }));
+
+        return {
+          ...prev,
+          pages: updatedPages,
+        };
+      });
       toast.success("Page Deleted.");
-      return data;
     } catch (err) {
       console.error("Error deleting page:", err.message);
       toast.error("Error deleting page");
@@ -225,6 +398,11 @@ export const FormCreationProvider = ({ children }) => {
         deletePageFromForm,
         initializeFormState,
         addSectionToActivePage,
+        addQuestionToActiveSection,
+        deleteSectionFromActivePage,
+        addTextBlockToActiveSection,
+        addImageBlockToActiveSection,
+        addVideoBlockToActiveSection,
         sectionColor,
         sectionOpacity,
         setSectionColor,

@@ -9,9 +9,11 @@ const {
   addPageToForm,
   deletePageFromForm,
   getAllForms,
+  updateForm,
 } = require("../controllers/formController");
 
 formsRouter.get("/all-forms", getAllForms);
+formsRouter.patch("/update-form/:formId", updateForm);
 formsRouter.get(
   "/:projectId",
   userAuth,

@@ -6,7 +6,7 @@ import { RxVideo, RxSection } from "react-icons/rx";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { useFormCreation } from "../../context/FormCreationContext";
 
-function FormToolbar({ onAddSection }) {
+function FormToolbar() {
   const {
     activePage,
     activeSection,
@@ -20,6 +20,11 @@ function FormToolbar({ onAddSection }) {
     setPageColor,
     setPageOpacity,
     setPageColorById,
+    addSectionToActivePage,
+    addQuestionToActiveSection,
+    addTextBlockToActiveSection,
+    addImageBlockToActiveSection,
+    addVideoBlockToActiveSection,
   } = useFormCreation();
 
   const handleSectionColorChange = (color) => {
@@ -57,7 +62,14 @@ function FormToolbar({ onAddSection }) {
   };
 
   const handleToolbarClick = (itemId) => {
-    if (itemId === "sections") onAddSection?.();
+    if (itemId === "sections") addSectionToActivePage?.();
+    if (itemId === "question")
+      addQuestionToActiveSection?.();
+    if (itemId === "text") addTextBlockToActiveSection?.();
+    if (itemId === "image")
+      addImageBlockToActiveSection?.();
+    if (itemId === "video")
+      addVideoBlockToActiveSection?.();
     else console.log(`${itemId} clicked`);
   };
 
@@ -95,6 +107,9 @@ function FormToolbar({ onAddSection }) {
       <div className='toolbar-items'>
         {toolbarItems.map((item) => (
           <button
+            disabled={
+              item.id !== "sections" && !activeSection
+            }
             key={item.id}
             className='toolbar-item'
             onClick={() => handleToolbarClick(item.id)}

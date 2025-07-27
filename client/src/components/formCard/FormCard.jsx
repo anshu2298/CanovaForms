@@ -4,9 +4,11 @@ import "./FormCard.css";
 import { useRef, useState } from "react";
 import DropdownMenu from "../dropdownMenu/DropdownMenu";
 import { useForms } from "../../context/FormContext";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 const FormCard = ({ form, draft }) => {
-  const { deleteForm } = useForms();
+  const { projectId } = useParams();
+
+  const { deleteForm, updateForms } = useForms();
   const [isDropdownOpen, setIsDropdownOpen] =
     useState(false);
   const menuButtonRef = useRef(null);
@@ -26,9 +28,7 @@ const FormCard = ({ form, draft }) => {
 
   const handleRenameSubmit = async () => {
     if (editedName.trim() && editedName !== form.title) {
-      // await updateProject(project._id, {
-      //   name: editedName,
-      // });
+      await updateForms(form._id, editedName, projectId);
     }
     setIsRenaming(false);
   };

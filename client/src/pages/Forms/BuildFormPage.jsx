@@ -13,7 +13,6 @@ function BuildFormPage() {
     setActivePage,
     title,
     setFormTitle,
-    addSectionToActivePage,
     createPageInForm,
     initializeFormState,
   } = useFormCreation();
@@ -40,7 +39,6 @@ function BuildFormPage() {
       <FormCanvas
         title={title}
         onTitleChange={setFormTitle}
-        onAddSection={addSectionToActivePage}
       />
     </div>
   );

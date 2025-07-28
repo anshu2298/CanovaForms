@@ -1,72 +1,112 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
 
-// Question Schema
-const QuestionSchema = new Schema({
-  type: { type: String, required: true },
-  label: { type: String, required: true },
-  required: { type: Boolean, default: false },
-  options: [String],
-  conditionalLogic: { type: Object, default: null },
+const TextBlockSchema = new mongoose.Schema({
+  id: String,
+  type: {
+    type: String,
+    enum: ["text"],
+    default: "text",
+  },
+  data: {
+    text: String,
+  },
 });
 
-// Section Schema
-const SectionSchema = new Schema({
-  sectionBackgroundColor: {
+const QuestionBlockSchema = new mongoose.Schema({
+  id: String,
+  type: {
+    type: String,
+    enum: ["question"],
+    default: "question",
+  },
+  data: {
+    question: String,
+    type: String,
+    options: [String],
+    required: {
+      type: Boolean,
+      default: false,
+    },
+  },
+});
+
+const ImageBlockSchema = new mongoose.Schema({
+  id: String,
+  type: {
+    type: String,
+    enum: ["image"],
+    default: "image",
+  },
+  data: {
+    url: String,
+  },
+});
+
+const VideoBlockSchema = new mongoose.Schema({
+  id: String,
+  type: {
+    type: String,
+    enum: ["video"],
+    default: "video",
+  },
+  data: {
+    url: String,
+  },
+});
+
+const SectionSchema = new mongoose.Schema({
+  id: String,
+  backgroundColor: {
     type: String,
     default: "#ffffff",
   },
-  sectionBackgroundOpacity: { type: Number, default: 100 },
-  questions: [QuestionSchema],
+  backgroundOpacity: {
+    type: Number,
+    default: 100,
+  },
+  content: [
+    {
+      type: mongoose.Schema.Types.Mixed, // allows any of the block types
+    },
+  ],
 });
 
-// Page Schema
-const PageSchema = new Schema({
+const PageSchema = new mongoose.Schema({
+  id: String,
   name: {
     type: String,
-    required: true,
     default: "Untitled Page",
   },
-  pageBackgroundColor: { type: String, default: "#ffffff" },
-  pageBackgroundOpacity: { type: Number, default: 100 },
-  sections: {
-    type: [SectionSchema],
-    default: () => [
-      {
-        pageBackgroundColor: "#ffffff",
-        pageBackgroundOpacity: 100,
-        questions: [],
-      },
-    ],
+  pageBackgroundColor: {
+    type: String,
+    default: "#ffffff",
   },
+  pageBackgroundOpacity: {
+    type: Number,
+    default: 100,
+  },
+  sections: [SectionSchema],
 });
 
-// Main Form Schema
-const FormSchema = new Schema(
+const FormSchema = new mongoose.Schema(
   {
-    title: { type: String, default: "Untitled Form" },
+    title: {
+      type: String,
+      default: "Untitled Form",
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
     project: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
     },
-    pages: {
-      type: [PageSchema],
-      default: () => [
-        {
-          name: "Page 01",
-          pageBackgroundColor: "#ffffff",
-          pageBackgroundOpacity: 100,
-          sections: [],
-        },
-      ],
-    },
+    pages: [PageSchema],
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Form", FormSchema);
+const Form = mongoose.model("Form", FormSchema);
+
+module.exports = Form;

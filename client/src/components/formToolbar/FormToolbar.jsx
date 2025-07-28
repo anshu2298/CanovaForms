@@ -32,6 +32,8 @@ function FormToolbar() {
   const [isUploadModalOpen, setUploadModalOpen] =
     useState(false);
 
+  const [uploadType, setUploadType] = useState("");
+
   const handleSectionColorChange = (color) => {
     setSectionColor(color);
     const sectionId = activeSection.id;
@@ -72,11 +74,20 @@ function FormToolbar() {
       addQuestionToActiveSection?.();
     if (itemId === "text") addTextBlockToActiveSection?.();
     if (itemId === "image") {
+      setUploadType("Image");
       setUploadModalOpen(true);
     }
-    if (itemId === "video")
-      addVideoBlockToActiveSection?.();
-    else console.log(`${itemId} clicked`);
+    if (itemId === "video") {
+      setUploadType("Video");
+      setUploadModalOpen(true);
+    }
+  };
+
+  const handleVideoUpload = (url) => {
+    if (url) {
+      addVideoBlockToActiveSection(url);
+    }
+    setUploadModalOpen(false);
   };
 
   const handleImageUpload = (url) => {
@@ -235,7 +246,12 @@ function FormToolbar() {
       <FileUploadModal
         isOpen={isUploadModalOpen}
         onClose={() => setUploadModalOpen(false)}
-        onUpload={handleImageUpload}
+        onUpload={
+          uploadType === "Image"
+            ? handleImageUpload
+            : handleVideoUpload
+        }
+        type={uploadType}
       />
     </>
   );

@@ -4,7 +4,12 @@ import { LuUpload } from "react-icons/lu";
 import "./FileUploadModal.css";
 import { useFormCreation } from "../../context/FormCreationContext";
 import { ClockLoader } from "react-spinners";
-const FileUploadModal = ({ isOpen, onClose, onUpload }) => {
+const FileUploadModal = ({
+  isOpen,
+  onClose,
+  onUpload,
+  type,
+}) => {
   const { uploadToCloudinaryViaServer } = useFormCreation();
   const [isUploading, setIsUploading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -194,7 +199,9 @@ const FileUploadModal = ({ isOpen, onClose, onUpload }) => {
                   Drag & drop a file to upload
                 </h3>
                 <p className='file-upload-upload-subtitle'>
-                  Consider up to 200 MB per video
+                  {type === "Image"
+                    ? "Max size of Image is 20 MB"
+                    : "Max size of Video is 200 MB"}
                 </p>
                 <div className='file-upload-separator'>
                   or

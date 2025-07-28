@@ -1,9 +1,9 @@
+import "./Section.css";
 import { useState } from "react";
 import { useFormCreation } from "../../context/FormCreationContext";
+import { IoMdClose } from "react-icons/io";
 import QuestionComponent from "../question/QuestionComponent";
 import TextBlock from "../textBlock/TextBlock";
-import "./Section.css";
-import { IoMdClose } from "react-icons/io";
 import ImageBlock from "../imageBlock/ImageBlock";
 import VideoBlock from "../videoBlock/VideoBlock";
 
@@ -12,6 +12,7 @@ function Section({ section, pageId }) {
     setActiveSection,
     deleteSectionFromActivePage,
     hexToRGBA,
+    updateTextBlockInSection,
   } = useFormCreation();
 
   const [questions, setQuestions] = useState([
@@ -78,7 +79,7 @@ function Section({ section, pageId }) {
             media!
           </p>
         ) : (
-          section.content.map((block, index) => {
+          section.content.map((block) => {
             switch (block.type) {
               case "question":
                 return (
@@ -100,10 +101,15 @@ function Section({ section, pageId }) {
                 return (
                   <TextBlock
                     key={block.id}
-                    textData={block.data}
-                    contentId={block.id}
-                    pageId={pageId}
-                    sectionId={section.id}
+                    data={block.data}
+                    onChange={(newData) =>
+                      updateTextBlockInSection(
+                        pageId,
+                        section.id,
+                        block.id,
+                        newData
+                      )
+                    }
                   />
                 );
               case "image":

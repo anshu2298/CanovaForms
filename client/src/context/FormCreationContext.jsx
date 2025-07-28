@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState } from "react";
-// import { useForms } from "./FormContext";
+
 import { toast } from "react-toastify";
 
 const FormCreationContext = createContext();
@@ -22,8 +22,6 @@ export const FormCreationProvider = ({ children }) => {
       },
     ],
   });
-
-  // const { fetchFormsById } = useForms();
 
   const [pageColor, setPageColor] = useState("#B6B6B6");
   const [pageOpacity, setPageOpacity] = useState(100);
@@ -232,6 +230,43 @@ export const FormCreationProvider = ({ children }) => {
     }));
   };
 
+  const updateTextBlockInSection = (
+    pageId,
+    sectionId,
+    blockId,
+    updatedData
+  ) => {
+    setFormState((prev) => ({
+      ...prev,
+      pages: prev.pages.map((page) =>
+        page._id === pageId
+          ? {
+              ...page,
+              sections: page.sections.map((section) =>
+                section.id === sectionId
+                  ? {
+                      ...section,
+                      content: section.content.map(
+                        (block) =>
+                          block.id === blockId
+                            ? {
+                                ...block,
+                                data: {
+                                  ...block.data,
+                                  ...updatedData,
+                                },
+                              }
+                            : block
+                      ),
+                    }
+                  : section
+              ),
+            }
+          : page
+      ),
+    }));
+  };
+
   const uploadToCloudinaryViaServer = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -281,12 +316,12 @@ export const FormCreationProvider = ({ children }) => {
     }));
   };
 
-  const addVideoBlockToActiveSection = () => {
+  const addVideoBlockToActiveSection = (url) => {
     const newVideoBlock = {
       id: `video-${Date.now()}`,
       type: "video",
       data: {
-        url: "", // Empty initially
+        url,
       },
     };
 
@@ -341,8 +376,13 @@ export const FormCreationProvider = ({ children }) => {
       // console.log(updatedPages);
     }
     setFormState({
+      _id: formFromDB._id || "",
       title: formFromDB.title || "Untitled Form",
+      createdAt: formFromDB.createdAt || "",
+      updatedAt: formFromDB.updatedAt || "",
       pages: updatedPages,
+      user: formFromDB.user,
+      project: formFromDB.project,
     });
   };
 
@@ -366,7 +406,7 @@ export const FormCreationProvider = ({ children }) => {
         );
       }
 
-      const newPage = await response.json();
+      const { newPage } = await response.json();
       setFormState((prev) => ({
         ...prev,
         pages: [
@@ -383,6 +423,54 @@ export const FormCreationProvider = ({ children }) => {
       console.error("Error creating page:", err.message);
       toast.error("Failed to add New page !");
       throw err;
+    }
+  };
+
+  //  Save a Form.
+  const saveForm = async (formState) => {
+    // Sanitize the form state before sending
+    const cleanedForm = {
+      _id: formState._id,
+      title: formState.title,
+      user: formState.user,
+      project: formState.project,
+      pages: formState.pages.map((page) => ({
+        name: page.name,
+        pageBackgroundColor: page.pageBackgroundColor,
+        pageBackgroundOpacity: page.pageBackgroundOpacity,
+        sections: page.sections.map((section) => ({
+          id: section.id,
+          backgroundColor: section.backgroundColor,
+          backgroundOpacity: section.backgroundOpacity,
+          content: section.content,
+        })),
+      })),
+    };
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/form/save-form/${formState._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(cleanedForm),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to save form. Status: ${response.status}`
+        );
+      }
+
+      const data = await response.json();
+      console.log("Form saved successfully:", data);
+      return data;
+    } catch (error) {
+      console.error("Error saving form:", error);
+      throw error;
     }
   };
 
@@ -428,7 +516,9 @@ export const FormCreationProvider = ({ children }) => {
     <FormCreationContext.Provider
       value={{
         ...formState,
+        formState,
         hexToRGBA,
+        saveForm,
         activePage,
         setFormTitle,
         activeSection,
@@ -444,6 +534,7 @@ export const FormCreationProvider = ({ children }) => {
         addTextBlockToActiveSection,
         addImageBlockToActiveSection,
         addVideoBlockToActiveSection,
+        updateTextBlockInSection,
         sectionColor,
         sectionOpacity,
         setSectionColor,

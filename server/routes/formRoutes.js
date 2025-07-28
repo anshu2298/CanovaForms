@@ -10,10 +10,12 @@ const {
   deletePageFromForm,
   getAllForms,
   updateForm,
+  saveForm,
 } = require("../controllers/formController");
 
 formsRouter.get("/all-forms", getAllForms);
 formsRouter.patch("/update-form/:formId", updateForm);
+formsRouter.put("/save-form/:formId", saveForm);
 formsRouter.get(
   "/:projectId",
   userAuth,

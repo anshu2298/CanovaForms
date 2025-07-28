@@ -18,7 +18,6 @@ function TextBlock({ data, onChange }) {
         onChange={(e) => setText(e.target.value)}
         placeholder='Enter instructional text here...'
         className='text-block-textarea'
-        rows={2}
       />
     </div>
   );

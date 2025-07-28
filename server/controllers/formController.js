@@ -128,6 +128,42 @@ const updateForm = async (req, res) => {
   }
 };
 
+// SAVE a form
+const saveForm = async (req, res) => {
+  const { formId } = req.params;
+  const updatedFormData = req.body;
+
+  try {
+    const existingForm = await Form.findById(formId);
+
+    if (!existingForm) {
+      return res
+        .status(404)
+        .json({ message: "Form not found" });
+    }
+
+    // Overwrite all top-level fields (title, pages, etc.)
+    existingForm.title =
+      updatedFormData.title || existingForm.title;
+    existingForm.pages = updatedFormData.pages || [];
+
+    // You can also update project/user if needed:
+    // existingForm.project = updatedFormData.project || existingForm.project;
+
+    await existingForm.save();
+
+    res.status(200).json({
+      message: "Form updated successfully",
+      form: existingForm,
+    });
+  } catch (err) {
+    console.error("Error updating form:", err);
+    res.status(500).json({
+      message: "Server error while updating form",
+    });
+  }
+};
+
 // Add a new page to a form
 const addPageToForm = async (req, res) => {
   const { formId } = req.params;
@@ -268,4 +304,5 @@ module.exports = {
   deletePageFromForm,
   getAllForms,
   updateForm,
+  saveForm,
 };

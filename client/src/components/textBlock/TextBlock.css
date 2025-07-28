@@ -4,10 +4,10 @@
 
 .text-block-textarea {
   width: 100%;
-  min-height: 60px;
+  min-height: 20px;
   border: none;
   resize: none;
-  font-size: 1rem;
+  font-size: 15px;
   background: transparent;
   padding: 10px;
   border-bottom: 1px solid #ccc;

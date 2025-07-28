@@ -8,6 +8,7 @@ const authRouter = require("./routes/authRoutes.js");
 const userRouter = require("./routes/userRoutes.js");
 const projectRouter = require("./routes/projectRoutes.js");
 const formRouter = require("./routes/formRoutes.js");
+const mediaRouter = require("./routes/mediaRoutes.js");
 const url = process.env.DB_URI;
 const app = express();
 const port = process.env.PORT || 3000;
@@ -28,6 +29,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/project", projectRouter);
 app.use("/api/form", formRouter);
+app.use("/api/media", mediaRouter);
 
 const start = async () => {
   try {

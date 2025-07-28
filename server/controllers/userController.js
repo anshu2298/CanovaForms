@@ -1,5 +1,5 @@
 const userModal = require("../modals/userModal.js");
-const cloudinary = require("cloudinary");
+const cloudinary = require("cloudinary").v2;
 
 const getUserData = async (req, res) => {
   try {
@@ -45,13 +45,20 @@ const uploadProfilePicture = async (req, res) => {
     }
 
     // Upload to Cloudinary
-    const result = await cloudinary.uploader.upload(
-      imageFile.path,
-      {
-        folder: "profile_pictures", // optional, just keeps Cloudinary organized
-        resource_type: "image",
-      }
-    );
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "image",
+          folder: "profile-pictures",
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+
+      stream.end(imageFile.buffer); // buffer comes from memoryStorage
+    });
 
     // Save URL to user model (optional)
     user.profileImageUrl = result.secure_url;

@@ -13,10 +13,12 @@ function TextBlock({ data, onChange }) {
   return (
     <div className='text-block'>
       <textarea
+        maxLength={200}
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder='Enter instructional text here...'
         className='text-block-textarea'
+        rows={2}
       />
     </div>
   );

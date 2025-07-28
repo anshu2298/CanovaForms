@@ -1,15 +1,19 @@
 import { useState } from "react";
 import { useFormCreation } from "../../context/FormCreationContext";
-import FileUploadModal from "../fileUploadModal/FileUploadModal";
 import QuestionComponent from "../question/QuestionComponent";
 import TextBlock from "../textBlock/TextBlock";
 import "./Section.css";
 import { IoMdClose } from "react-icons/io";
 import ImageBlock from "../imageBlock/ImageBlock";
 import VideoBlock from "../videoBlock/VideoBlock";
+
 function Section({ section, pageId }) {
-  const { setActiveSection, deleteSectionFromActivePage } =
-    useFormCreation();
+  const {
+    setActiveSection,
+    deleteSectionFromActivePage,
+    hexToRGBA,
+  } = useFormCreation();
+
   const [questions, setQuestions] = useState([
     {
       id: 1,
@@ -17,6 +21,11 @@ function Section({ section, pageId }) {
       type: "Multiple Choice",
     },
   ]);
+
+  const color = hexToRGBA(
+    section.backgroundColor,
+    section.backgroundOpacity
+  );
 
   const handleQuestionChange = (questionId, data) => {
     // If question text is empty, remove the question
@@ -34,15 +43,14 @@ function Section({ section, pageId }) {
     );
   };
 
+  if (!section) return null;
   return (
     <div
       className={`form-section ${
         section.active ? "active" : ""
       }`}
       style={{
-        backgroundColor:
-          section.backgroundColor || "#ffffff",
-        opacity: (section.backgroundOpacity ?? 100) / 100,
+        backgroundColor: color,
       }}
     >
       <div className='section-header'>
@@ -99,7 +107,12 @@ function Section({ section, pageId }) {
                   />
                 );
               case "image":
-                return <ImageBlock />;
+                return (
+                  <ImageBlock
+                    key={block.id}
+                    data={block}
+                  />
+                );
               case "video":
                 return (
                   <VideoBlock

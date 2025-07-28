@@ -4,7 +4,12 @@ import Section from "../section/Section";
 import { useFormCreation } from "../../context/FormCreationContext";
 
 function FormCanvas({ title, onTitleChange }) {
-  const { activePage } = useFormCreation();
+  const { activePage, hexToRGBA } = useFormCreation();
+
+  const color = hexToRGBA(
+    activePage?.pageBackgroundColor,
+    activePage?.pageBackgroundOpacity
+  );
   return (
     <div className='form-canvas'>
       <div className='canvas-header'>
@@ -24,11 +29,7 @@ function FormCanvas({ title, onTitleChange }) {
         <div
           className='canvas-workspace'
           style={{
-            backgroundColor:
-              activePage?.pageBackgroundColor,
-            opacity:
-              (activePage?.pageBackgroundOpacity || 1) /
-              100,
+            backgroundColor: color,
           }}
         >
           {activePage?.sections?.length > 0 ? (

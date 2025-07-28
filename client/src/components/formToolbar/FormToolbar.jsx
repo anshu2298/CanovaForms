@@ -5,6 +5,8 @@ import { CiImageOn } from "react-icons/ci";
 import { RxVideo, RxSection } from "react-icons/rx";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { useFormCreation } from "../../context/FormCreationContext";
+import { useState } from "react";
+import FileUploadModal from "../fileUploadModal/FileUploadModal";
 
 function FormToolbar() {
   const {
@@ -26,6 +28,9 @@ function FormToolbar() {
     addImageBlockToActiveSection,
     addVideoBlockToActiveSection,
   } = useFormCreation();
+
+  const [isUploadModalOpen, setUploadModalOpen] =
+    useState(false);
 
   const handleSectionColorChange = (color) => {
     setSectionColor(color);
@@ -66,11 +71,19 @@ function FormToolbar() {
     if (itemId === "question")
       addQuestionToActiveSection?.();
     if (itemId === "text") addTextBlockToActiveSection?.();
-    if (itemId === "image")
-      addImageBlockToActiveSection?.();
+    if (itemId === "image") {
+      setUploadModalOpen(true);
+    }
     if (itemId === "video")
       addVideoBlockToActiveSection?.();
     else console.log(`${itemId} clicked`);
+  };
+
+  const handleImageUpload = (url) => {
+    if (url) {
+      addImageBlockToActiveSection(url);
+    }
+    setUploadModalOpen(false); // close modal after upload
   };
 
   const toolbarItems = [
@@ -103,112 +116,128 @@ function FormToolbar() {
   ];
 
   return (
-    <div className='form-toolbar'>
-      <div className='toolbar-items'>
-        {toolbarItems.map((item) => (
-          <button
-            disabled={
-              item.id !== "sections" && !activeSection
-            }
-            key={item.id}
-            className='toolbar-item'
-            onClick={() => handleToolbarClick(item.id)}
-          >
-            <span className='toolbar-icon'>
-              {item.icon}
-            </span>
-            <span className='toolbar-label'>
-              {item.label}
-            </span>
-          </button>
-        ))}
-      </div>
+    <>
+      <div className='form-toolbar'>
+        <div className='toolbar-items'>
+          {toolbarItems.map((item) => (
+            <button
+              disabled={
+                item.id !== "sections" && !activeSection
+              }
+              key={item.id}
+              className='toolbar-item'
+              onClick={() => handleToolbarClick(item.id)}
+            >
+              <span className='toolbar-icon'>
+                {item.icon}
+              </span>
+              <span className='toolbar-label'>
+                {item.label}
+              </span>
+            </button>
+          ))}
+        </div>
 
-      <div className='color-controls'>
-        <div className='color-section'>
-          <label className='color-label'>
-            Background Color
-          </label>
-          <div className='color-input-group'>
-            <div
-              className='color-preview'
-              style={{
-                backgroundColor:
-                  activePage?.pageBackgroundColor,
-                opacity:
-                  (activePage?.pageBackgroundOpacity || 1) /
-                  100,
-              }}
-            ></div>
-            <input
-              name='color-input'
-              type='text'
-              value={activePage?.pageBackgroundColor}
-              onChange={(e) =>
-                handlePageColorChange(e.target.value)
-              }
-              className='color-input'
-            />
-            <input
-              type='number'
-              min='0'
-              max='100'
-              name='opacity-input'
-              className='opacity-input'
-              value={activePage?.pageBackgroundOpacity}
-              onChange={(e) =>
-                handlePageOpacityChange(e.target.value)
-              }
-            />
+        <div className='color-controls'>
+          <div className='color-section'>
+            <label className='color-label'>
+              Background Color
+            </label>
+            <div className='color-input-group'>
+              <input
+                name='color-input'
+                type='color'
+                value={
+                  activePage?.pageBackgroundColor ||
+                  "#ffffff"
+                }
+                onChange={(e) =>
+                  handlePageColorChange(e.target.value)
+                }
+                className='color-preview'
+              />
+              <input
+                name='color-input'
+                type='text'
+                value={activePage?.pageBackgroundColor}
+                onChange={(e) =>
+                  handlePageColorChange(e.target.value)
+                }
+                className='color-input'
+              />
+              <input
+                type='number'
+                min='0'
+                max='100'
+                name='opacity-input'
+                className='opacity-input'
+                value={activePage?.pageBackgroundOpacity}
+                onChange={(e) =>
+                  handlePageOpacityChange(e.target.value)
+                }
+              />
+            </div>
+          </div>
+
+          <div className='color-section'>
+            <label className='color-label'>
+              Section Color
+            </label>
+            <div className='color-input-group'>
+              <input
+                className='color-preview'
+                disabled={!activeSection}
+                type='color'
+                value={
+                  activeSection?.backgroundColor ||
+                  "#ffffff"
+                }
+                onChange={(e) => {
+                  setSectionColor(e.target.value);
+                  handleSectionColorChange(e.target.value);
+                }}
+              />
+              <input
+                disabled={!activeSection}
+                type='text'
+                value={activeSection?.backgroundColor || ""}
+                onChange={(e) => {
+                  setSectionColor(e.target.value);
+                  handleSectionColorChange(e.target.value);
+                }}
+                className='color-input'
+              />
+              <input
+                type='number'
+                disabled={!activeSection}
+                min='0'
+                max='100'
+                name='opacity-input'
+                className='opacity-input'
+                value={
+                  activeSection?.backgroundOpacity || ""
+                }
+                onChange={(e) => {
+                  setSectionOpacity(e.target.value);
+                  handleSectionOpacityChange(
+                    e.target.value
+                  );
+                }}
+              />
+            </div>
           </div>
         </div>
 
-        <div className='color-section'>
-          <label className='color-label'>
-            Section Color
-          </label>
-          <div className='color-input-group'>
-            <div
-              className='color-preview'
-              style={{
-                backgroundColor:
-                  activeSection?.backgroundColor,
-                opacity:
-                  (activeSection?.backgroundOpacity || 1) /
-                  100,
-              }}
-            ></div>
-            <input
-              disabled={!activeSection}
-              type='text'
-              value={activeSection?.backgroundColor || ""}
-              onChange={(e) => {
-                setSectionColor(e.target.value);
-                handleSectionColorChange(e.target.value);
-              }}
-              className='color-input'
-            />
-            <input
-              type='number'
-              disabled={!activeSection}
-              min='0'
-              max='100'
-              name='opacity-input'
-              className='opacity-input'
-              value={activeSection?.backgroundOpacity || ""}
-              onChange={(e) => {
-                setSectionOpacity(e.target.value);
-                handleSectionOpacityChange(e.target.value);
-              }}
-            />
-          </div>
+        <div className='toolbar-footer'>
+          <button className='next-btn'>Next</button>
         </div>
       </div>
-
-      <div className='toolbar-footer'>
-        <button className='next-btn'>Next</button>
-      </div>
-    </div>
+      <FileUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setUploadModalOpen(false)}
+        onUpload={handleImageUpload}
+      />
+    </>
   );
 }
 

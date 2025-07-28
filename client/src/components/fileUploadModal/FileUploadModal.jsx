@@ -2,13 +2,13 @@ import { useState, useRef } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { LuUpload } from "react-icons/lu";
 import "./FileUploadModal.css";
-const FileUploadModal = ({
-  isOpen,
-  onClose,
-  onFileSelect,
-}) => {
+import { useFormCreation } from "../../context/FormCreationContext";
+import { ClockLoader } from "react-spinners";
+const FileUploadModal = ({ isOpen, onClose, onUpload }) => {
+  const { uploadToCloudinaryViaServer } = useFormCreation();
+  const [isUploading, setIsUploading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleDragEnter = (e) => {
@@ -20,7 +20,6 @@ const FileUploadModal = ({
   const handleDragLeave = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    // Only set isDragOver to false if we're leaving the drop zone entirely
     if (!e.currentTarget.contains(e.relatedTarget)) {
       setIsDragOver(false);
     }
@@ -36,44 +35,84 @@ const FileUploadModal = ({
     e.stopPropagation();
     setIsDragOver(false);
 
-    const files = Array.from(e.dataTransfer.files);
-    handleFiles(files);
+    const file = e.dataTransfer.files[0];
+    handleFile(file);
   };
 
   const handleFileSelect = (e) => {
-    const files = Array.from(e.target.files);
-    handleFiles(files);
+    const file = e.target.files[0];
+    handleFile(file);
   };
 
-  const handleFiles = (files) => {
-    const validFiles = files.filter((file) => {
-      // Check file size (200MB limit for videos)
-      const maxSize = 200 * 1024 * 1024; // 200MB in bytes
-      if (file.size > maxSize) {
-        alert(
-          `File "${file.name}" is too large. Maximum size is 200MB.`
-        );
-        return false;
-      }
-      return true;
-    });
+  const handleFile = (file) => {
+    const imageTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/jpg",
+    ];
+    const videoTypes = [
+      "video/mp4",
+      "video/webm",
+      "video/ogg",
+      "video/quicktime",
+    ];
 
-    setSelectedFiles(validFiles);
-    if (onFileSelect) {
-      onFileSelect(validFiles);
+    const isImage = imageTypes.includes(file.type);
+    const isVideo = videoTypes.includes(file.type);
+
+    if (!isImage && !isVideo) {
+      alert(
+        `Unsupported file type "${file.type}". Please upload an image or video.`
+      );
+      return;
     }
+
+    const maxImageSize = 25 * 1024 * 1024; // 25MB
+    const maxVideoSize = 200 * 1024 * 1024; // 200MB
+
+    if (isImage && file.size > maxImageSize) {
+      alert(
+        `Image "${file.name}" is too large. Max size is 25MB.`
+      );
+      return;
+    }
+
+    if (isVideo && file.size > maxVideoSize) {
+      alert(
+        `Video "${file.name}" is too large. Max size is 200MB.`
+      );
+      return;
+    }
+
+    setSelectedFile(file);
   };
 
   const handleBrowseClick = () => {
     fileInputRef.current?.click();
   };
 
-  const handleClose = () => {
-    setSelectedFiles([]);
-    setIsDragOver(false);
-    if (onClose) {
-      onClose();
+  const handleUpload = async () => {
+    setIsUploading(true);
+    try {
+      if (!selectedFile) return;
+      const url = await uploadToCloudinaryViaServer(
+        selectedFile
+      );
+      onUpload(url);
+      console.log(url);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsUploading(false);
+      handleClose();
     }
+  };
+
+  const handleClose = () => {
+    setSelectedFile(null);
+    setIsDragOver(false);
+    onClose?.();
   };
 
   if (!isOpen) return null;
@@ -108,46 +147,42 @@ const FileUploadModal = ({
             className={`file-upload-upload-area ${
               isDragOver ? "file-upload-drag-over" : ""
             } ${
-              selectedFiles.length > 0
-                ? "file-upload-has-files"
-                : ""
+              selectedFile ? "file-upload-has-files" : ""
             }`}
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
           >
-            {selectedFiles.length > 0 ? (
+            {selectedFile ? (
               <div className='file-upload-selected-files'>
                 <LuUpload
                   size={48}
                   className='file-upload-upload-icon success'
                 />
-                <div className='file-upload-files-list'>
-                  {selectedFiles.map((file, index) => (
-                    <div
-                      key={index}
-                      className='file-upload-file-item'
-                    >
-                      <span className='file-upload-file-name'>
-                        {file.name}
-                      </span>
-                      <span className='file-upload-file-size'>
-                        {(
-                          file.size /
-                          (1024 * 1024)
-                        ).toFixed(2)}{" "}
-                        MB
-                      </span>
-                    </div>
-                  ))}
+                <div className='file-upload-file-item'>
+                  <span className='file-upload-file-name'>
+                    {selectedFile.name}
+                  </span>
+                  <span className='file-upload-file-size'>
+                    {(
+                      selectedFile.size /
+                      (1024 * 1024)
+                    ).toFixed(2)}{" "}
+                    MB
+                  </span>
                 </div>
-                <button
-                  className='file-upload-browse-button'
-                  onClick={handleBrowseClick}
-                >
-                  Select different files
-                </button>
+                {isUploading ? (
+                  <ClockLoader color='white' />
+                ) : (
+                  <button
+                    className='file-upload-browse-button'
+                    onClick={handleUpload}
+                    disabled={isUploading}
+                  >
+                    Upload
+                  </button>
+                )}
               </div>
             ) : (
               <div className='file-upload-upload-content'>
@@ -156,10 +191,10 @@ const FileUploadModal = ({
                   className='file-upload-upload-icon'
                 />
                 <h3 className='file-upload-upload-title'>
-                  Drag & drop files to upload
+                  Drag & drop a file to upload
                 </h3>
                 <p className='file-upload-upload-subtitle'>
-                  Consider upto 200 mb per video
+                  Consider up to 200 MB per video
                 </p>
                 <div className='file-upload-separator'>
                   or
@@ -168,7 +203,7 @@ const FileUploadModal = ({
                   className='file-upload-browse-button'
                   onClick={handleBrowseClick}
                 >
-                  Browse files
+                  Browse file
                 </button>
               </div>
             )}
@@ -177,7 +212,6 @@ const FileUploadModal = ({
           <input
             ref={fileInputRef}
             type='file'
-            multiple
             onChange={handleFileSelect}
             className='file-upload-file-input'
             accept='*/*'

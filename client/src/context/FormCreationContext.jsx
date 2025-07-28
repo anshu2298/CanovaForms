@@ -13,11 +13,11 @@ export const FormCreationProvider = ({ children }) => {
     title: "Untitled Form",
     pages: [
       {
-        id: "",
+        _id: "temp-id-1",
         name: "",
         active: true,
-        backgroundColor: "",
-        backgroundOpacity: 100,
+        pageBackgroundColor: "#ffffff",
+        pageBackgroundOpacity: 100,
         sections: [],
       },
     ],
@@ -50,6 +50,29 @@ export const FormCreationProvider = ({ children }) => {
         active: page._id === pageId,
       })),
     }));
+  };
+
+  const hexToRGBA = (hex, opacity = 100) => {
+    if (!hex || typeof hex !== "string")
+      return "rgba(0,0,0,1)";
+    let r = 0,
+      g = 0,
+      b = 0;
+
+    if (hex.startsWith("#")) hex = hex.slice(1);
+
+    if (hex.length === 3) {
+      r = parseInt(hex[0] + hex[0], 16);
+      g = parseInt(hex[1] + hex[1], 16);
+      b = parseInt(hex[2] + hex[2], 16);
+    } else if (hex.length === 6) {
+      r = parseInt(hex.substring(0, 2), 16);
+      g = parseInt(hex.substring(2, 4), 16);
+      b = parseInt(hex.substring(4, 6), 16);
+    }
+
+    const alpha = Math.max(0, Math.min(100, opacity)) / 100;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
   const setActiveSection = (pageId, sectionId) => {
@@ -209,13 +232,29 @@ export const FormCreationProvider = ({ children }) => {
     }));
   };
 
-  const addImageBlockToActiveSection = () => {
+  const uploadToCloudinaryViaServer = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch(
+      "http://localhost:3000/api/media/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+    return data.url;
+  };
+
+  const addImageBlockToActiveSection = (url) => {
     const newImageBlock = {
       id: `image-${Date.now()}`,
       type: "image",
       data: {
-        url: "", // initially blank; update via UI later
-        alt: "", // optional alt text
+        url,
+        alt: "Uploaded Image",
       },
     };
 
@@ -230,7 +269,7 @@ export const FormCreationProvider = ({ children }) => {
                   ? {
                       ...section,
                       content: [
-                        ...(section.content ?? []),
+                        ...(section.content || []),
                         newImageBlock,
                       ],
                     }
@@ -389,6 +428,7 @@ export const FormCreationProvider = ({ children }) => {
     <FormCreationContext.Provider
       value={{
         ...formState,
+        hexToRGBA,
         activePage,
         setFormTitle,
         activeSection,
@@ -399,6 +439,7 @@ export const FormCreationProvider = ({ children }) => {
         initializeFormState,
         addSectionToActivePage,
         addQuestionToActiveSection,
+        uploadToCloudinaryViaServer,
         deleteSectionFromActivePage,
         addTextBlockToActiveSection,
         addImageBlockToActiveSection,

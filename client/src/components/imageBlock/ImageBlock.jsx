@@ -1,14 +1,16 @@
+import "./ImageBlock.css";
 const ImageBlock = ({ data }) => {
+  console.log(data.data.url);
   return (
-    <div style={{ margin: "1rem 0" }}>
+    <div className='image-container'>
       {data?.url ? (
         <img
-          src={data.url}
+          className='image'
+          src={data.data.url}
           alt={data.alt || "Uploaded Image"}
-          style={{ maxWidth: "100%", borderRadius: "8px" }}
         />
       ) : (
-        <p style={{ color: "gray" }}>No image uploaded.</p>
+        <p className='fallback-text'>No image uploaded.</p>
       )}
     </div>
   );

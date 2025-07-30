@@ -1,11 +1,10 @@
 import "./Section.css";
-import { useState } from "react";
 import { useFormCreation } from "../../context/FormCreationContext";
 import { IoMdClose } from "react-icons/io";
-import QuestionComponent from "../question/QuestionComponent";
 import TextBlock from "../textBlock/TextBlock";
 import ImageBlock from "../imageBlock/ImageBlock";
 import VideoBlock from "../videoBlock/VideoBlock";
+import Question from "../question/Question/Question";
 
 function Section({ section, pageId }) {
   const {
@@ -13,36 +12,33 @@ function Section({ section, pageId }) {
     deleteSectionFromActivePage,
     hexToRGBA,
     updateTextBlockInSection,
+    deleteQuestionFromSection,
+    updateQuestionBlockInSection,
   } = useFormCreation();
 
-  const [questions, setQuestions] = useState([
-    {
-      id: 1,
-      question: "What is ?",
-      type: "Multiple Choice",
-    },
-  ]);
+  const handleQuestionChange = (contentId, data) => {
+    if (data.label.trim() === "") {
+      deleteQuestionFromSection(
+        pageId,
+        section.id,
+        contentId
+      );
+    } else {
+      updateQuestionBlockInSection(
+        pageId,
+        section.id,
+        contentId,
+        data
+      );
+    }
+  };
+
+  let questionCounter = 0;
 
   const color = hexToRGBA(
     section.backgroundColor,
     section.backgroundOpacity
   );
-
-  const handleQuestionChange = (questionId, data) => {
-    // If question text is empty, remove the question
-    if (data.question === "" && questions.length > 1) {
-      setQuestions((prev) =>
-        prev.filter((q) => q.id !== questionId)
-      );
-      return;
-    }
-
-    setQuestions((prev) =>
-      prev.map((q) =>
-        q.id === questionId ? { ...q, ...data } : q
-      )
-    );
-  };
 
   if (!section) return null;
   return (
@@ -80,28 +76,34 @@ function Section({ section, pageId }) {
           </p>
         ) : (
           section.content.map((block) => {
+            if (block.type === "question") {
+              questionCounter += 1;
+              return (
+                <Question
+                  key={block.id}
+                  questionData={block.data}
+                  questionNumber={questionCounter}
+                  onUpdate={(newData) =>
+                    handleQuestionChange(block.id, newData)
+                  }
+                  onDelete={() =>
+                    deleteQuestionFromSection(
+                      pageId,
+                      section.id,
+                      block.id
+                    )
+                  }
+                />
+              );
+            }
+
             switch (block.type) {
-              case "question":
-                return (
-                  <QuestionComponent
-                    key={block.id}
-                    question={block.data}
-                    contentId={block.id}
-                    pageId={pageId}
-                    sectionId={section.id}
-                    onChange={(data) =>
-                      handleQuestionChange(
-                        questions.id,
-                        data
-                      )
-                    }
-                  />
-                );
               case "text":
                 return (
                   <TextBlock
                     key={block.id}
-                    data={block.data}
+                    sectionId={section.id}
+                    data={block}
                     onChange={(newData) =>
                       updateTextBlockInSection(
                         pageId,

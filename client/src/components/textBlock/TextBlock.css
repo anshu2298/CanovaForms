@@ -2,6 +2,11 @@
   margin: 10px 0;
 }
 
+.text-block-textarea::placeholder {
+  color: #000; /* Light gray placeholder text */
+  font-style: italic;
+}
+
 .text-block-textarea {
   width: 100%;
   min-height: 20px;
@@ -10,7 +15,7 @@
   font-size: 15px;
   background: transparent;
   padding: 10px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #000;
   outline: none;
   scrollbar-width: none;
   font-style: italic;

@@ -2,13 +2,13 @@ import FormCard from "../../../components/formCard/FormCard";
 import { useForms } from "../../../context/FormContext";
 import "./Forms.css";
 const Forms = () => {
-  const { standaloneForms } = useForms();
+  const { filteredForms } = useForms();
 
-  return standaloneForms.length === 0 ? (
+  return filteredForms.length === 0 ? (
     <p className='fallback-text'>No Forms available.</p>
   ) : (
     <div className='forms-grid'>
-      {standaloneForms.map((form) => {
+      {filteredForms.map((form) => {
         return (
           <FormCard
             key={form._id}

@@ -15,7 +15,6 @@ function FormCanvas({ title, onTitleChange }) {
     activePage?.pageBackgroundOpacity || 100
   );
 
-  console.log(activePage);
   return (
     <div className='form-canvas'>
       <div className='canvas-header'>

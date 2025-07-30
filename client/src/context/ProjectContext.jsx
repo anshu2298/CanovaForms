@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useContext,
@@ -10,13 +11,14 @@ const ProjectsContext = createContext();
 export const ProjectsProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [projectSearchQuery, setProjectSearchQuery] =
+    useState("");
 
   const filteredProjects = Array.isArray(projects)
     ? projects.filter((project) =>
         project.name
           .toLowerCase()
-          .includes(searchQuery.toLowerCase())
+          .includes(projectSearchQuery.toLowerCase())
       )
     : [];
 
@@ -145,8 +147,8 @@ export const ProjectsProvider = ({ children }) => {
         loading,
         createProject,
         deleteProject,
-        setSearchQuery,
-        searchQuery,
+        setProjectSearchQuery,
+        projectSearchQuery,
         filteredProjects,
         updateProject,
       }}

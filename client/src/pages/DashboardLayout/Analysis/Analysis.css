@@ -1,0 +1,24 @@
+.stats-section {
+  display: flex;
+  gap: 20px;
+}
+
+.stat-card-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.response-chart-section {
+  width: 100%;
+}
+
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(200px, 1fr)
+  );
+  gap: 20px;
+  margin: 40px 0px 20px 0px;
+}

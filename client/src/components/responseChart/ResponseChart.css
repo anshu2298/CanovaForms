@@ -1,0 +1,110 @@
+.response-chart {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 400px;
+  flex: 1;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.chart-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chart-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.chart-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.subtitle-separator {
+  color: #d1d5db;
+}
+
+.chart-controls {
+  display: flex;
+  gap: 16px;
+}
+
+.period-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.period-btn:hover {
+  background: #f3f4f6;
+}
+
+.period-btn.active {
+  color: #8b5cf6;
+  font-weight: 500;
+}
+
+.chart-container {
+  height: 280px;
+  margin-top: 20px;
+}
+
+.custom-tooltip {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip-label {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0 0 4px 0;
+}
+
+.tooltip-value {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 2px 0;
+}
+
+@media (max-width: 768px) {
+  .chart-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .chart-controls {
+    align-self: stretch;
+    justify-content: flex-start;
+  }
+
+  .chart-container {
+    height: 220px;
+  }
+}

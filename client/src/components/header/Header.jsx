@@ -2,8 +2,12 @@ import { useLocation } from "react-router-dom";
 import "./Header.css";
 import { IoSearch } from "react-icons/io5";
 import { useProjects } from "../../context/ProjectContext";
+import { useForms } from "../../context/FormContext";
 function Header() {
-  const { setSearchQuery, searchQuery } = useProjects();
+  const { setProjectSearchQuery, projectSearchQuery } =
+    useProjects();
+  const { formSearchQuery, setFormSearchQuery } =
+    useForms();
   const location = useLocation();
   const currentPath = location.pathname.split("/").pop();
   return (
@@ -20,10 +24,18 @@ function Header() {
                   ? "Search Projects..."
                   : "Search Forms..."
               }
-              value={searchQuery}
-              onChange={(e) =>
-                setSearchQuery(e.target.value)
+              value={
+                currentPath === "projects"
+                  ? projectSearchQuery
+                  : formSearchQuery
               }
+              onChange={(e) => {
+                if (currentPath === "projects") {
+                  setProjectSearchQuery(e.target.value);
+                } else {
+                  setFormSearchQuery(e.target.value);
+                }
+              }}
             />
             <button className='search-button'>
               <IoSearch size={20} />

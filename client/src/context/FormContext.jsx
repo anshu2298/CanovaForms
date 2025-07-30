@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
 import { toast } from "react-toastify";
@@ -11,6 +12,18 @@ export const FormsProvider = ({ children }) => {
   const [standaloneForms, setStandaloneForms] = useState(
     []
   );
+
+  const [formSearchQuery, setFormSearchQuery] =
+    useState("");
+
+  const filteredForms = Array.isArray(standaloneForms)
+    ? standaloneForms.filter((form) =>
+        form.title
+          .toLowerCase()
+          .includes(formSearchQuery.toLowerCase())
+      )
+    : [];
+
   const fetchForms = async (projectId) => {
     try {
       setLoading(true);
@@ -196,6 +209,9 @@ export const FormsProvider = ({ children }) => {
         standaloneForms,
         fetchAllForms,
         updateForms,
+        formSearchQuery,
+        setFormSearchQuery,
+        filteredForms,
       }}
     >
       {children}

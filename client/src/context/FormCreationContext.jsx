@@ -168,8 +168,8 @@ export const FormCreationProvider = ({ children }) => {
       id: `question-${Date.now()}`,
       type: "question",
       data: {
-        questionType: "short-answer", // default subtype
-        label: "Untitled Question",
+        questionType: "Multiple Choice", // default subtype
+        label: "What is ..?",
         required: false,
         options: [],
       },
@@ -189,6 +189,67 @@ export const FormCreationProvider = ({ children }) => {
                         ...(section.content ?? []),
                         newQuestionBlock,
                       ],
+                    }
+                  : section
+              ),
+            }
+          : page
+      ),
+    }));
+  };
+
+  const deleteQuestionFromSection = (
+    pageId,
+    sectionId,
+    contentId
+  ) => {
+    setFormState((prev) => ({
+      ...prev,
+      pages: prev.pages.map((page) =>
+        page._id === pageId
+          ? {
+              ...page,
+              sections: page.sections.map((section) =>
+                section.id === sectionId
+                  ? {
+                      ...section,
+                      content: section.content.filter(
+                        (block) => block.id !== contentId
+                      ),
+                    }
+                  : section
+              ),
+            }
+          : page
+      ),
+    }));
+  };
+
+  const updateQuestionBlockInSection = (
+    pageId,
+    sectionId,
+    contentId,
+    newData
+  ) => {
+    setFormState((prev) => ({
+      ...prev,
+      pages: prev.pages.map((page) =>
+        page._id === pageId
+          ? {
+              ...page,
+              sections: page.sections.map((section) =>
+                section.id === sectionId
+                  ? {
+                      ...section,
+                      content: section.content.map(
+                        (block) =>
+                          block.id === contentId
+                            ? {
+                                ...block,
+                                data: newData,
+                              }
+                            : block
+                      ),
                     }
                   : section
               ),
@@ -346,6 +407,28 @@ export const FormCreationProvider = ({ children }) => {
           : page
       ),
     }));
+  };
+
+  const deleteBlockFromSection = (sectionId, blockId) => {
+    setFormState((prev) => {
+      const updatedPages = prev.pages.map((page) => {
+        return {
+          ...page,
+          sections: page.sections.map((section) => {
+            if (section.id !== sectionId) return section;
+
+            return {
+              ...section,
+              content: section.content.filter(
+                (block) => block.id !== blockId
+              ),
+            };
+          }),
+        };
+      });
+
+      return { ...prev, pages: updatedPages };
+    });
   };
 
   const setPageColorById = (pageId, color, opacity) => {
@@ -535,6 +618,9 @@ export const FormCreationProvider = ({ children }) => {
         addImageBlockToActiveSection,
         addVideoBlockToActiveSection,
         updateTextBlockInSection,
+        deleteQuestionFromSection,
+        updateQuestionBlockInSection,
+        deleteBlockFromSection,
         sectionColor,
         sectionOpacity,
         setSectionColor,

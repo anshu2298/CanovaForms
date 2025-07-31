@@ -3,6 +3,7 @@ import FormToolbar from "../formToolbar/FormToolbar";
 import Section from "../section/Section";
 import { useFormCreation } from "../../context/FormCreationContext";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function FormCanvas({ title, onTitleChange }) {
   const navigate = useNavigate();
@@ -27,7 +28,8 @@ function FormCanvas({ title, onTitleChange }) {
         <div className='canvas-actions'>
           <button
             className='preview-btn'
-            onClick={() => {
+            onClick={async () => {
+              await saveForm(formState);
               navigate(`/preview/${formId}`);
             }}
           >
@@ -35,7 +37,15 @@ function FormCanvas({ title, onTitleChange }) {
           </button>
           <button
             className='save-btn'
-            onClick={() => saveForm(formState)}
+            onClick={async () => {
+              try {
+                await saveForm(formState);
+                toast.success("Form Saved");
+              } catch (error) {
+                console.log(error);
+                toast.error("Failed to Save the Form");
+              }
+            }}
           >
             Save
           </button>

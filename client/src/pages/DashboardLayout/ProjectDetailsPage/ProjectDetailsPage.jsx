@@ -8,11 +8,13 @@ import { useForms } from "../../../context/FormContext";
 const ProjectDetailsPage = () => {
   const navigate = useNavigate();
   const { projectId } = useParams();
-  const { projects } = useProjects();
+  const { projects, sharedProjects } = useProjects();
   const { forms, fetchForms, createFormsInsideProject } =
     useForms();
 
-  const project = projects.find((p) => p._id === projectId);
+  const project =
+    projects.find((p) => p._id === projectId) ||
+    sharedProjects.find((p) => p._id === projectId);
 
   useEffect(() => {
     fetchForms(projectId);

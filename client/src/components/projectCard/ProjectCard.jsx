@@ -7,14 +7,15 @@ import { Link } from "react-router-dom";
 import { useProjects } from "../../context/ProjectContext";
 import ShareModal from "../shareModal/ShareModal";
 function ProjectCard({ project }) {
-  const { deleteProject, updateProject } = useProjects();
+  const { deleteProject, updateProject, shareProject } =
+    useProjects();
   const [isDropdownOpen, setIsDropdownOpen] =
     useState(false);
+  const [isSharing, setIsSharing] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
   const [editedName, setEditedName] = useState(
     project.name
   );
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const menuButtonRef = useRef(null);
 
   const handleMenuClick = (e) => {
@@ -78,15 +79,19 @@ function ProjectCard({ project }) {
                 } else if (actionId === "rename") {
                   setIsRenaming(true);
                 } else if (actionId === "share") {
-                  setIsModalOpen(true);
-                  setIsDropdownOpen(!isDropdownOpen);
+                  setIsDropdownOpen(false);
+                  setIsSharing(true);
                 }
               }}
+              isSharing={isSharing}
+              setIsSharing={setIsSharing}
+              share={shareProject}
             />
           )}
           <ShareModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+            isSharing={isSharing}
+            setIsSharing={setIsSharing}
+            share={shareProject}
           />
         </div>
       </div>

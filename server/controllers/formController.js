@@ -24,10 +24,16 @@ const getFormsByProjectId = async (req, res) => {
   }
 };
 
-//get All Forms.
+//get All Forms for a user.
 const getAllForms = async (req, res) => {
+  const userId = req.user;
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res
+      .status(400)
+      .json({ message: "Invalid userId " });
+  }
   try {
-    const forms = await Form.find();
+    const forms = await Form.find({ user: userId });
     res.status(200).json(forms);
   } catch (error) {
     console.error("Error fetching forms:", error);
@@ -99,7 +105,55 @@ const createForm = async (req, res) => {
   }
 };
 
-//update a form.
+//Share a form.
+const shareForm = async (req, res) => {
+  const { formId } = req.params;
+  const { userEmail } = req.body;
+
+  const user = await User.findOneAndUpdate(
+    { email: userEmail },
+    {
+      $addToSet: { sharedForms: formId },
+    },
+    { new: true }
+  );
+
+  if (!user) {
+    return res
+      .status(404)
+      .json({ message: "User not found" });
+  }
+
+  res
+    .status(200)
+    .json({ message: "Form shared successfully", user });
+};
+
+//get shared forms for a user.
+const getSharedFormsForUser = async (req, res) => {
+  const userId = req.user;
+
+  try {
+    const user = await User.findById(userId)
+      .populate("sharedForms")
+      .select("sharedForms");
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found" });
+    }
+
+    res.status(200).json({ sharedForms: user.sharedForms });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching shared forms",
+      error,
+    });
+  }
+};
+
+//rename a form.
 const updateForm = async (req, res) => {
   try {
     const { formId } = req.params;
@@ -305,4 +359,6 @@ module.exports = {
   getAllForms,
   updateForm,
   saveForm,
+  shareForm,
+  getSharedFormsForUser,
 };

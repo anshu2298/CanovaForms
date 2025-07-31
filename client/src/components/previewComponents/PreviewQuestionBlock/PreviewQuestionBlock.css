@@ -1,0 +1,102 @@
+.preview-question-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 600px;
+}
+
+.question-statemant {
+  flex: 1;
+  border: none;
+  font-size: 16px;
+  color: #000;
+  outline: none;
+  padding: 8px 0;
+  background: transparent;
+}
+
+.preview-question-content {
+  padding: 10px 50px;
+}
+
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 40px 10px 12px;
+  font-size: 16px;
+  color: #333;
+  min-width: 200px;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M70 90L20 40h100z' fill='%23999'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+.options {
+  font-size: 19px;
+}
+
+.size {
+  font-size: 22px;
+}
+
+.file-upload-area {
+  border: 2px dashed #dadce0;
+  border-radius: 8px;
+  padding: 32px;
+  text-align: center;
+  background-color: #fafbfc;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  margin: 10px 30px;
+}
+
+.file-upload-area:hover {
+  border-color: #4285f4;
+  background-color: #f8f9ff;
+}
+
+.file-upload-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.file-upload-text {
+  color: #5f6368;
+}
+
+.file-upload-subtext {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.file-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.preview-date-picker {
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  outline: none;
+  width: 200px;
+  box-sizing: border-box;
+}
+
+.extra-padding {
+  padding: 10px 40px;
+}

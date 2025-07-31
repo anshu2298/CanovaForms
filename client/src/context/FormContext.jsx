@@ -12,12 +12,15 @@ export const FormsProvider = ({ children }) => {
   const [standaloneForms, setStandaloneForms] = useState(
     []
   );
+  const [sharedForms, setSharedForms] = useState([]);
 
   const [formSearchQuery, setFormSearchQuery] =
     useState("");
 
-  const filteredForms = Array.isArray(standaloneForms)
-    ? standaloneForms.filter((form) =>
+  const ALL_FORMS = [...standaloneForms, ...sharedForms];
+
+  const filteredForms = Array.isArray(ALL_FORMS)
+    ? ALL_FORMS.filter((form) =>
         form.title
           .toLowerCase()
           .includes(formSearchQuery.toLowerCase())
@@ -58,6 +61,64 @@ export const FormsProvider = ({ children }) => {
       console.error("Failed to fetch forms", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const shareForm = async (formId, userEmail) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/form/share-form/${formId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userEmail }),
+          credentials: "include", // if you're using cookies for auth
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to share form"
+        );
+      }
+
+      console.log("Form shared successfully:", data);
+      return data;
+    } catch (error) {
+      console.error("Error sharing form:", error.message);
+      throw error;
+    }
+  };
+
+  const getSharedForms = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/form/share/get-shared-forms",
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(
+          error.message || "Failed to fetch shared forms"
+        );
+      }
+
+      const data = await response.json();
+      setSharedForms(data.sharedForms);
+    } catch (error) {
+      console.error("Error fetching shared forms:", error);
+      throw error;
     }
   };
 
@@ -192,6 +253,7 @@ export const FormsProvider = ({ children }) => {
 
   useEffect(() => {
     fetchAllForms();
+    getSharedForms();
   }, []);
 
   return (
@@ -212,6 +274,9 @@ export const FormsProvider = ({ children }) => {
         formSearchQuery,
         setFormSearchQuery,
         filteredForms,
+        shareForm,
+        getSharedForms,
+        sharedForms,
       }}
     >
       {children}

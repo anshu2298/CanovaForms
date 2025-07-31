@@ -79,6 +79,7 @@ const updateProject = async (req, res) => {
 
 // Delete Project
 const deleteProject = async (req, res) => {
+  const userId = req.user;
   try {
     const { projectId } = req.params;
 
@@ -90,7 +91,6 @@ const deleteProject = async (req, res) => {
         .status(404)
         .json({ message: "Project not found" });
 
-    // Optional: delete all forms linked to this project
     await Form.deleteMany({ project: projectId });
 
     return res
@@ -122,6 +122,56 @@ const getAllProjects = async (req, res) => {
   }
 };
 
+//Share a Project .
+const shareProject = async (req, res) => {
+  const { projectId } = req.params;
+  const { userEmail } = req.body;
+
+  const user = await User.findOneAndUpdate(
+    { email: userEmail },
+    {
+      $addToSet: { sharedProjects: projectId },
+    },
+    { new: true }
+  );
+
+  if (!user) {
+    return res
+      .status(404)
+      .json({ message: "User not found" });
+  }
+
+  res
+    .status(200)
+    .json({ message: "Project shared successfully", user });
+};
+
+//get shared projects for a user
+const getSharedProjectsForUser = async (req, res) => {
+  const userId = req.user;
+
+  try {
+    const user = await User.findById(userId)
+      .populate("sharedProjects")
+      .select("sharedProjects");
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found" });
+    }
+
+    res
+      .status(200)
+      .json({ sharedProjects: user.sharedProjects });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching shared projects",
+      error,
+    });
+  }
+};
+
 // Get Project by ID
 const getProjectById = async (req, res) => {
   try {
@@ -150,4 +200,6 @@ module.exports = {
   deleteProject,
   getAllProjects,
   getProjectById,
+  getSharedProjectsForUser,
+  shareProject,
 };

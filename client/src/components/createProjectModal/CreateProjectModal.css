@@ -8,9 +8,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
   backdrop-filter: blur(2px);
-  z-index: 2000;
+  z-index: 3000;
 }
 
 .create-project-modal-content {

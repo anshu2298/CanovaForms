@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./QuestionTypes.css";
 
 const Dropdown = ({ questionData, onUpdate }) => {
+  console.log(questionData);
   const [options, setOptions] = useState(() =>
     questionData.options?.length
       ? questionData.options
@@ -42,7 +43,6 @@ const Dropdown = ({ questionData, onUpdate }) => {
 
     setOptions(updatedOptions);
   };
-
   const handleKeyDown = (e, option) => {
     if (
       e.key === "Backspace" &&
@@ -55,7 +55,6 @@ const Dropdown = ({ questionData, onUpdate }) => {
       );
     }
   };
-
   return (
     <div className='question-type'>
       <div className='options-list'>

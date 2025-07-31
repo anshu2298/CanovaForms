@@ -1,0 +1,111 @@
+.preview-container {
+  padding: 2rem;
+  font-family: sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  scrollbar-width: none;
+}
+
+.form-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70%;
+  scrollbar-width: none;
+}
+
+.preview-header {
+  border-bottom: 1px solid black;
+  border-radius: 20px 20px 0 0;
+}
+
+.preview-title {
+  font-size: 30px;
+  margin: 20px;
+}
+
+.preview-page {
+  margin-bottom: 2rem;
+  width: 100%;
+  border: 1px black solid;
+  border-radius: 20px;
+  height: 100%;
+  scrollbar-width: none;
+}
+
+.preview-page-content {
+  padding: 20px;
+  scrollbar-width: none;
+}
+
+.preview-question-block {
+  margin-bottom: 1rem;
+}
+
+.preview-question {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.page-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 0 1rem;
+  gap: 20px;
+}
+.preview-section {
+  border-radius: 10px;
+  padding: 10px 20px;
+  scrollbar-width: none;
+}
+
+.page-navigation button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 200px;
+}
+
+.page-navigation button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.page-number {
+  font-weight: bold;
+}
+
+.back-to-edit {
+  padding: 10px 30px;
+  background-color: #000000;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease,
+    transform 0.1s ease;
+  position: fixed;
+  bottom: 50px;
+  right: 60px;
+}
+
+.back-to-edit:hover {
+  background-color: #4b4b4c; /* Darker indigo */
+}
+
+.back-to-edit:active {
+  transform: scale(0.97);
+}

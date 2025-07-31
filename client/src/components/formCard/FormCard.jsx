@@ -7,8 +7,8 @@ import { useForms } from "../../context/FormContext";
 import { Link, useParams } from "react-router-dom";
 const FormCard = ({ form, draft }) => {
   const { projectId } = useParams();
-
-  const { deleteForm, updateForms } = useForms();
+  const { deleteForm, updateForms, shareForm } = useForms();
+  const [isSharing, setIsSharing] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] =
     useState(false);
   const menuButtonRef = useRef(null);
@@ -87,13 +87,20 @@ const FormCard = ({ form, draft }) => {
               isOpen={isDropdownOpen}
               onClose={handleCloseDropdown}
               itemId={form._id}
+              itemType='form'
               onAction={(actionId, id) => {
                 if (actionId === "delete") {
                   deleteForm(id);
                 } else if (actionId === "rename") {
                   setIsRenaming(true);
+                } else if (actionId === "share") {
+                  setIsDropdownOpen(false);
+                  setIsSharing(true);
                 }
               }}
+              isSharing={isSharing}
+              setIsSharing={setIsSharing}
+              share={shareForm}
             />
           )}
         </div>

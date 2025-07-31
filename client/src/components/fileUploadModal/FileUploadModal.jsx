@@ -105,7 +105,6 @@ const FileUploadModal = ({
         selectedFile
       );
       onUpload(url);
-      console.log(url);
     } catch (error) {
       console.log(error);
     } finally {

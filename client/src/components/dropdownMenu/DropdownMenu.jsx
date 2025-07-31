@@ -1,18 +1,21 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import "./DropdownMenu.css";
-
+import ShareModal from "../shareModal/ShareModal";
 function DropdownMenu({
   isOpen,
   onClose,
   onAction,
   itemId,
+  itemType,
+  isSharing,
+  setIsSharing,
+  share,
 }) {
+  const [email, setEmail] = useState("");
   const menuRef = useRef(null);
-
   const menuItems = [
     { id: "share", label: "Share" },
     { id: "rename", label: "Rename" },
-    { id: "copy", label: "Copy" },
     { id: "delete", label: "Delete" },
   ];
 
@@ -63,13 +66,29 @@ function DropdownMenu({
           className={`dropdown-item ${
             item.id === "delete" ? "danger" : ""
           }`}
-          onClick={() => handleItemClick(item.id)}
+          onClick={() => {
+            if (item.id === "share") {
+              setIsSharing(true);
+              return;
+            }
+            handleItemClick(item.id);
+          }}
         >
           <span className='dropdown-label'>
             {item.label}
           </span>
         </button>
       ))}
+      <ShareModal
+        itemType={itemType}
+        onClose={() => {
+          setIsSharing(false);
+        }}
+        isOpen={isSharing}
+        email={email}
+        setEmail={setEmail}
+        share={() => share(itemId, email)}
+      />
     </div>
   );
 }

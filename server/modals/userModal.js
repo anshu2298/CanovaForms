@@ -14,7 +14,16 @@ const userSchema = new mongoose.Schema({
       ref: "Project",
     },
   ],
+  sharedProjects: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Project",
+    },
+  ],
   forms: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "Form" },
+  ],
+  sharedForms: [
     { type: mongoose.Schema.Types.ObjectId, ref: "Form" },
   ],
 });

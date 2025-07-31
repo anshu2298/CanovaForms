@@ -10,6 +10,10 @@ export const getInitialQuestionData = (
 
   switch (questionType) {
     case "Short Answer":
+      return {
+        ...base,
+        answer: "",
+      };
     case "Long Answer":
       return {
         ...base,
@@ -17,13 +21,27 @@ export const getInitialQuestionData = (
       };
 
     case "Multiple Choice":
-    case "Checkboxes":
-    case "Dropdown":
       return {
         ...base,
         options: [
           { id: `opt-${Date.now()}`, text: "" },
           { id: `opt-${Date.now() + 1}`, text: "" },
+        ],
+      };
+    case "Checkboxes":
+      return {
+        ...base,
+        options: [
+          { id: `opt-${Date.now()}`, text: "" },
+          { id: `opt-${Date.now() + 1}`, text: "" },
+        ],
+      };
+    case "Dropdown":
+      return {
+        ...base,
+        options: [
+          // { id: `opt-${Date.now()}`, text: "" },
+          // { id: `opt-${Date.now() + 1}`, text: "" },
         ],
       };
 

@@ -7,6 +7,8 @@ const {
   updateProject,
   getAllProjects,
   getProjectById,
+  shareProject,
+  getSharedProjectsForUser,
 } = require("../controllers/projectController");
 
 projectRouter.post("/create", userAuth, createProject);
@@ -14,6 +16,12 @@ projectRouter.delete(
   "/delete/:projectId",
   userAuth,
   deleteProject
+);
+projectRouter.patch("/share/:projectId", shareProject);
+projectRouter.get(
+  "/share/get-shared-projects",
+  userAuth,
+  getSharedProjectsForUser
 );
 projectRouter.patch(
   "/update/:projectId",

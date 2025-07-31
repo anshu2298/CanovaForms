@@ -8,7 +8,7 @@ function VideoBlock({ block }) {
           src={block.data.url}
           controls
           width='100%'
-          style={{ borderRadius: "8px" }}
+          className='video-player'
         />
       ) : (
         <p className='video-placeholder'>

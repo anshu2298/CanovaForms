@@ -9,13 +9,16 @@ import { toast } from "react-toastify";
 const ProjectsContext = createContext();
 
 export const ProjectsProvider = ({ children }) => {
+  const [sharedProjects, setSharedProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [projectSearchQuery, setProjectSearchQuery] =
     useState("");
 
-  const filteredProjects = Array.isArray(projects)
-    ? projects.filter((project) =>
+  const allProjects = [...projects, ...sharedProjects];
+
+  const filteredProjects = Array.isArray(allProjects)
+    ? allProjects.filter((project) =>
         project.name
           .toLowerCase()
           .includes(projectSearchQuery.toLowerCase())
@@ -135,8 +138,73 @@ export const ProjectsProvider = ({ children }) => {
     }
   };
 
+  const shareProject = async (projectId, userEmail) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/project/share/${projectId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userEmail }),
+          credentials: "include", // if you're using cookies for auth
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to share project"
+        );
+      }
+
+      console.log("project shared successfully:", data);
+      return data;
+    } catch (error) {
+      console.error(
+        "Error sharing project:",
+        error.message
+      );
+      throw error;
+    }
+  };
+
+  const getSharedProjects = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/project/share/get-shared-projects",
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(
+          error.message || "Failed to fetch shared projects"
+        );
+      }
+
+      const data = await response.json();
+      setSharedProjects(data.sharedProjects);
+    } catch (error) {
+      console.error(
+        "Error fetching shared projects:",
+        error
+      );
+      throw error;
+    }
+  };
+
   useEffect(() => {
     fetchProjects();
+    getSharedProjects();
   }, []);
 
   return (
@@ -151,6 +219,8 @@ export const ProjectsProvider = ({ children }) => {
         projectSearchQuery,
         filteredProjects,
         updateProject,
+        sharedProjects,
+        shareProject,
       }}
     >
       {children}

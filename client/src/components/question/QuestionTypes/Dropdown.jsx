@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import "./QuestionTypes.css";
+import { useFormCreation } from "../../../context/FormCreationContext";
 
 const Dropdown = ({ questionData, onUpdate }) => {
-  console.log(questionData);
+  const { conditionsMode } = useFormCreation();
   const [options, setOptions] = useState(() =>
     questionData.options?.length
       ? questionData.options

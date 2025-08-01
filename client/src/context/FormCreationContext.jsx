@@ -9,6 +9,8 @@ export const useFormCreation = () =>
   useContext(FormCreationContext);
 
 export const FormCreationProvider = ({ children }) => {
+  const [conditionsMode, setConditionsMode] =
+    useState(false);
   const [formState, setFormState] = useState({
     title: "Untitled Form",
     pages: [
@@ -621,6 +623,8 @@ export const FormCreationProvider = ({ children }) => {
         deleteQuestionFromSection,
         updateQuestionBlockInSection,
         deleteBlockFromSection,
+        conditionsMode,
+        setConditionsMode,
         sectionColor,
         sectionOpacity,
         setSectionColor,

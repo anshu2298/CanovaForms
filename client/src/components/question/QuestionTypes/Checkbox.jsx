@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import "./QuestionTypes.css";
+import { useFormCreation } from "../../../context/FormCreationContext";
 
 const Checkbox = ({ questionData, onUpdate }) => {
+  const { conditionsMode } = useFormCreation();
   const [options, setOptions] = useState(() =>
     questionData.options?.length
       ? questionData.options

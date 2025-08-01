@@ -18,6 +18,8 @@ function FormToolbar() {
     setSectionOpacity,
     setSectionColorById,
     pageColor,
+    saveForm,
+    formState,
     pageOpacity,
     setPageColor,
     setPageOpacity,
@@ -27,6 +29,7 @@ function FormToolbar() {
     addTextBlockToActiveSection,
     addImageBlockToActiveSection,
     addVideoBlockToActiveSection,
+    setConditionsMode,
   } = useFormCreation();
 
   const [isUploadModalOpen, setUploadModalOpen] =
@@ -81,6 +84,12 @@ function FormToolbar() {
       setUploadType("Video");
       setUploadModalOpen(true);
     }
+    if (itemId === "condition") {
+      (async () => {
+        await saveForm(formState);
+        setConditionsMode((prev) => !prev);
+      })();
+    }
   };
 
   const handleVideoUpload = (url) => {
@@ -94,7 +103,7 @@ function FormToolbar() {
     if (url) {
       addImageBlockToActiveSection(url);
     }
-    setUploadModalOpen(false); // close modal after upload
+    setUploadModalOpen(false);
   };
 
   const toolbarItems = [
@@ -133,7 +142,9 @@ function FormToolbar() {
           {toolbarItems.map((item) => (
             <button
               disabled={
-                item.id !== "sections" && !activeSection
+                item.id !== "condition" &&
+                item.id !== "sections" &&
+                !activeSection
               }
               key={item.id}
               className='toolbar-item'

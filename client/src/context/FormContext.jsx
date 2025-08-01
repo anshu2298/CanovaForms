@@ -126,13 +126,11 @@ export const FormsProvider = ({ children }) => {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:3000/api/form/get-form/${formId}`,
-        {
-          credentials: "include",
-        }
+        `http://localhost:3000/api/form/get-form/${formId}`
       );
       const data = await res.json();
       setFormById(data);
+      console.log(data);
     } catch (err) {
       console.error("Failed to fetch forms", err);
     } finally {

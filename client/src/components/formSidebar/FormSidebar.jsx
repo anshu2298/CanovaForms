@@ -9,7 +9,9 @@ import { useFormCreation } from "../../context/FormCreationContext";
 function FormSidebar({ pages, onAddPage, onSelectPage }) {
   const navigate = useNavigate();
   const { formId } = useParams();
-  const { deletePageFromForm } = useFormCreation();
+  const { deletePageFromForm, conditionsMode } =
+    useFormCreation();
+
   return (
     <div className='form-sidebar'>
       <div className='sidebar-header'>
@@ -57,6 +59,7 @@ function FormSidebar({ pages, onAddPage, onSelectPage }) {
         </div>
         <button
           className='add-page-btn'
+          disabled={conditionsMode}
           onClick={onAddPage}
         >
           <span className='add-icon'>+</span>

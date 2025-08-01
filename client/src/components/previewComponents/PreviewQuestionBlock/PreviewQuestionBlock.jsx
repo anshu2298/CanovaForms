@@ -1,15 +1,49 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./PreviewQuestionBlock.css";
 const PreviewQuestionBlock = ({
   data,
   questionCounter,
+  onResponseChange,
 }) => {
+  console.log(data);
+  const shortRef = useRef();
+  const longRef = useRef();
+  const sliderRef = useRef();
   const [rating, setRating] = useState(0);
+  const [scaleValue, setScaleValue] = useState(0);
+  const [selectedOptions, setSelectedOptions] = useState(
+    []
+  );
+  // eslint-disable-next-line no-unused-vars
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const sendResponse = (answer) => {
+    onResponseChange &&
+      onResponseChange({
+        questionId: data.id,
+        questionType: data.data.questionType,
+        label: data.data.label,
+        answer,
+      });
+  };
+
+  const handleCheckboxChange = (text) => {
+    let updated;
+    if (selectedOptions.includes(text)) {
+      updated = selectedOptions.filter((t) => t !== text);
+    } else {
+      updated = [...selectedOptions, text];
+    }
+    setSelectedOptions(updated);
+    sendResponse(updated);
+  };
+
   const handleRatingClick = (i) => {
     setRating(i);
+    sendResponse(i);
   };
   const renderQuestion = () => {
-    switch (data.questionType) {
+    switch (data.data.questionType) {
       case "Short Answer":
         return (
           <div className='preview-question-container'>
@@ -18,15 +52,18 @@ const PreviewQuestionBlock = ({
                 Q{questionCounter}
               </div>
               <label className='question-statemant size'>
-                {data.label}
+                {data.data.label}
               </label>
             </div>
             <div className='preview-question-content'>
               <input
+                ref={shortRef}
                 className='short-answer-input'
                 type='text'
-                disabled
                 placeholder='Short answer'
+                onBlur={() =>
+                  sendResponse(shortRef.current.value)
+                }
               />
             </div>
           </div>
@@ -39,13 +76,16 @@ const PreviewQuestionBlock = ({
                 Q{questionCounter}
               </div>
               <label className='question-statemant size'>
-                {data.label}
+                {data.data.label}
               </label>
             </div>
             <div className='preview-question-content'>
               <textarea
+                ref={longRef}
                 className='long-answer-input'
-                disabled
+                onBlur={() =>
+                  sendResponse(longRef.current.value)
+                }
                 placeholder='Long answer'
               ></textarea>
             </div>
@@ -59,19 +99,20 @@ const PreviewQuestionBlock = ({
                 Q{questionCounter}
               </div>
               <label className='question-statemant size'>
-                {data.label}
+                {data.data.label}
               </label>
             </div>
             <div className='preview-question-content'>
-              {data.options?.map((opt) => (
+              {data.data.options?.map((opt) => (
                 <div
                   key={opt.id}
                   className='option-input-group'
                 >
                   <input
                     type='radio'
-                    disabled
+                    name={`mcq-${data._id}`}
                     className='option-radio'
+                    onChange={() => sendResponse(opt.text)}
                   />
                   <label className='option-text-input options'>
                     {opt.text}
@@ -89,18 +130,20 @@ const PreviewQuestionBlock = ({
                 Q{questionCounter}
               </div>
               <label className='question-statemant size'>
-                {data.label}
+                {data.data.label}
               </label>
             </div>
             <div className='preview-question-content'>
-              {data.options?.map((opt) => (
+              {data.data.options?.map((opt) => (
                 <div
                   key={opt.id}
                   className='option-input-group'
                 >
                   <input
+                    onChange={() =>
+                      handleCheckboxChange(opt.text)
+                    }
                     type='checkbox'
-                    disabled
                     className='option-checkbox'
                   />
                   <label className='option-text-input options'>
@@ -119,13 +162,24 @@ const PreviewQuestionBlock = ({
                 Q{questionCounter}
               </div>
               <label className='question-statemant size'>
-                {data.label}
+                {data.data.label}
               </label>
             </div>
             <div className='preview-question-content'>
-              <select className='custom-select'>
-                {data.options?.map((opt) => (
-                  <option key={opt.id}>{opt.text}</option>
+              <select
+                className='custom-select '
+                onChange={(e) =>
+                  sendResponse(e.target.value)
+                }
+              >
+                <option value=''>Select</option>
+                {data.data.options?.map((opt) => (
+                  <option
+                    key={opt.id}
+                    value={opt.text}
+                  >
+                    {opt.text}
+                  </option>
                 ))}
               </select>
             </div>
@@ -139,12 +193,15 @@ const PreviewQuestionBlock = ({
                 Q{questionCounter}
               </div>
               <label className='question-statemant size'>
-                {data.label}
+                {data.data.label}
               </label>
             </div>
             <div className='preview-question-content'>
               <input
                 type='date'
+                onChange={(e) =>
+                  sendResponse(e.target.value)
+                }
                 className='preview-date-picker'
               />
             </div>
@@ -158,7 +215,7 @@ const PreviewQuestionBlock = ({
                 Q{questionCounter}
               </div>
               <label className='question-statemant size'>
-                {data.label}
+                {data.data.label}
               </label>
             </div>
             <div className='extra-padding'>
@@ -171,9 +228,20 @@ const PreviewQuestionBlock = ({
                 </div>
                 <input
                   type='file'
-                  multiple={data.noOfFiles > 1}
-                  accept={data.typeOfFile}
+                  multiple={data.data.noOfFiles > 1}
+                  accept={data.data.typeOfFile}
                   className='file-input'
+                  onChange={(e) => {
+                    const files = Array.from(
+                      e.target.files
+                    );
+                    setSelectedFile(files);
+                    sendResponse(
+                      data.noOfFiles > 1
+                        ? files.map((f) => f.name)
+                        : files[0]?.name
+                    );
+                  }}
                 />
               </div>
             </div>
@@ -187,23 +255,39 @@ const PreviewQuestionBlock = ({
                 Q{questionCounter}
               </div>
               <label className='question-statemant size'>
-                {data.label}
+                {data.data.label}
               </label>
             </div>
             <div className='scale-container extra-padding'>
               <div className='scale-body'>
-                <span>{data.scaleStart}</span>
+                <span>{data.data.scaleStart}</span>
                 <input
+                  ref={sliderRef}
                   type='range'
-                  min={data.scaleStart}
-                  max={data.scaleEnd}
+                  value={scaleValue}
+                  min={data.data.scaleStart}
+                  max={data.data.scaleEnd}
                   className='scale-slider'
+                  onMouseUp={() =>
+                    sendResponse(
+                      Number(sliderRef.current.value)
+                    )
+                  }
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    setScaleValue(val);
+                  }}
+                  onTouchEnd={() =>
+                    sendResponse(
+                      Number(sliderRef.current.value)
+                    )
+                  }
                 />
-                <span>{data.scaleEnd}</span>
+                <span>{data.data.scaleEnd}</span>
               </div>
               <div className='scale-footer'>
                 <p className='scale-label'>Value:</p>
-                <p className='scale-value'>7</p>
+                <p className='scale-value'>{scaleValue}</p>
               </div>
             </div>
           </div>
@@ -217,12 +301,12 @@ const PreviewQuestionBlock = ({
                 Q{questionCounter}
               </div>
               <label className='question-statemant size'>
-                {data.label}
+                {data.data.label}
               </label>
             </div>
             <div className='stars extra-padding'>
               {Array.from(
-                { length: Number(data.scale) || 0 },
+                { length: Number(data.data.scale) || 5 },
                 (_, i) => {
                   const index = i + 1;
                   return (

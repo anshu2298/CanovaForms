@@ -54,6 +54,18 @@ const VideoBlockSchema = new mongoose.Schema({
   },
 });
 
+const QuestionResponseSchema = new mongoose.Schema({
+  questionId: String,
+  questionType: String,
+  label: String,
+  answer: mongoose.Schema.Types.Mixed,
+});
+
+const PageResponseSchema = new mongoose.Schema({
+  pageId: String,
+  questionResponses: [QuestionResponseSchema],
+});
+
 const SectionSchema = new mongoose.Schema({
   id: String,
   backgroundColor: {
@@ -66,7 +78,7 @@ const SectionSchema = new mongoose.Schema({
   },
   content: [
     {
-      type: mongoose.Schema.Types.Mixed, // allows any of the block types
+      type: mongoose.Schema.Types.Mixed,
     },
   ],
 });
@@ -94,6 +106,7 @@ const FormSchema = new mongoose.Schema(
       type: String,
       default: "Untitled Form",
     },
+    deployedUrl: "String",
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -103,9 +116,33 @@ const FormSchema = new mongoose.Schema(
       ref: "Project",
     },
     pages: [PageSchema],
+    userResponses: [PageResponseSchema],
   },
   { timestamps: true }
 );
+
+FormSchema.pre("save", function (next) {
+  if (this.isNew && this.pages.length === 0) {
+    const defaultSection = {
+      id: new mongoose.Types.ObjectId().toString(),
+      backgroundColor: "#ffffff",
+      backgroundOpacity: 100,
+      content: [],
+    };
+
+    const defaultPage = {
+      id: new mongoose.Types.ObjectId().toString(),
+      name: "Page 01",
+      pageBackgroundColor: "#ffffff",
+      pageBackgroundOpacity: 100,
+      sections: [defaultSection],
+    };
+
+    this.pages.push(defaultPage);
+  }
+
+  next();
+});
 
 const Form = mongoose.model("Form", FormSchema);
 

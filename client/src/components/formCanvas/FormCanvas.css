@@ -10,6 +10,17 @@
   overflow-y: auto;
 }
 
+.condition-section {
+  width: 100%;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.hello {
+  width: 100%;
+}
+
 .canvas-header {
   display: flex;
   align-items: center;
@@ -96,6 +107,32 @@
   box-shadow: none;
   overflow-y: auto;
   scrollbar-width: none;
+  position: relative;
+}
+
+.condition-btn {
+  position: absolute;
+  bottom: 30px;
+  right: 300px;
+  width: 150px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background-color: #69b5f8;
+  color: #fff;
+  font-size: 15px;
+  transition: background-color 0.2s ease,
+    transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.condition-btn:hover {
+  background-color: #549edf;
+}
+
+.condition-btn:active {
+  transform: scale(0.97);
 }
 
 .empty-canvas {

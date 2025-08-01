@@ -2,10 +2,7 @@ import "./Preview.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useForms } from "../../context/FormContext";
-import PreviewTextBlock from "../../components/previewComponents/PreviewTextBlock/PreviewTextBlock";
-import PreviewImageBlock from "../../components/previewComponents/PreviewImageBlock/PreviewImageBlock";
-import PreviewVideoBlock from "../../components/previewComponents/PreviewVideoBlock/PreviewVideoBlock";
-import PreviewQuestionBlock from "../../components/previewComponents/PreviewQuestionBlock/PreviewQuestionBlock";
+import UserForm from "../../components/userForm/UserForm";
 
 const Preview = () => {
   const navigate = useNavigate();
@@ -21,82 +18,15 @@ const Preview = () => {
   const totalPages = formByID.pages.length;
   const currentPage = formByID.pages[currentPageIndex];
 
-  let questionCounter = 0;
-
   if (!formByID) return <p>Loading preview...</p>;
 
   return (
     <div className='preview-container'>
       <div className='form-preview'>
-        <div
-          className='preview-page'
-          style={{
-            backgroundColor:
-              currentPage.pageBackgroundColor || "#fff",
-          }}
-        >
-          <div className='preview-header'>
-            <h1 className='preview-title'>
-              {formByID.title}
-            </h1>
-          </div>
-
-          <div className='preview-page-content'>
-            {currentPage.sections.map((section) => (
-              <div
-                key={section.id}
-                className='preview-section'
-                style={{
-                  backgroundColor:
-                    section.backgroundColor || "#fff",
-                }}
-              >
-                {section.content.map((block) => {
-                  if (block.type === "question") {
-                    questionCounter += 1;
-                    return (
-                      <PreviewQuestionBlock
-                        questionCounter={questionCounter}
-                        key={block.id}
-                        data={block.data}
-                      />
-                    );
-                  }
-
-                  switch (block.type) {
-                    case "image":
-                      return (
-                        <PreviewImageBlock
-                          key={block.id}
-                          data={block.data}
-                        />
-                      );
-                    case "text":
-                      return (
-                        <PreviewTextBlock
-                          key={block.id}
-                          data={block.data.text}
-                        />
-                      );
-                    case "video":
-                      return (
-                        <PreviewVideoBlock
-                          key={block.id}
-                          data={block.data}
-                        />
-                      );
-                    default:
-                      return (
-                        <p key={block.id}>
-                          Unsupported block type
-                        </p>
-                      );
-                  }
-                })}
-              </div>
-            ))}
-          </div>
-        </div>
+        <UserForm
+          currentPage={currentPage}
+          title={formByID.title}
+        />
         <div className='page-navigation'>
           <button
             onClick={() =>

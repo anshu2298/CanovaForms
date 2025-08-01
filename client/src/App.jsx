@@ -22,6 +22,7 @@ import ProjectDetailsPage from "./pages/DashboardLayout/ProjectDetailsPage/Proje
 import BuildFormPage from "./pages/Forms/BuildFormPage";
 import Forms from "./pages/DashboardLayout/Forms/Forms";
 import Preview from "./pages/PreviewPage/Preview";
+import ViewerForm from "./pages/ViewerForm/ViewerForm";
 
 const App = () => {
   const [email, setEmail] = useState("");
@@ -122,6 +123,10 @@ const App = () => {
               <Profile />
             </RequireAuth>
           }
+        />
+        <Route
+          path='/view-form/:id'
+          element={<ViewerForm />}
         />
 
         {/* Fallback */}

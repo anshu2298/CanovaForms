@@ -15,7 +15,7 @@ const port = process.env.PORT || 3000;
 
 // const allowedOrigins = ["http://localhost:5173"];
 const allowedOrigins = [
-  "https://canova-forms-frontend-28m5ae514-anshus-projects-bf8d6507.vercel.app",
+  "https://canovaforms-frontend.onrender.com/",
 ];
 app.use(express.json());
 app.use(cookieParser());

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { API_PATHS } from "../../utils/apiPaths";
 function ResetPassword({ email }) {
   const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState("");
@@ -26,7 +27,7 @@ function ResetPassword({ email }) {
 
     try {
       const res = await fetch(
-        "http://localhost:3000/api/auth/reset-password",
+        API_PATHS.AUTH.RESET_PASSWORD,
         {
           method: "POST",
           headers: {

@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
 import { toast } from "react-toastify";
+import { API_PATHS } from "../utils/apiPaths";
 const FormContext = createContext();
 
 export const FormsProvider = ({ children }) => {
@@ -31,7 +32,7 @@ export const FormsProvider = ({ children }) => {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:3000/api/form/${projectId}`,
+        API_PATHS.FORMS.GET_FORMS_INSIDE_PROJECT(projectId),
         {
           credentials: "include",
         }
@@ -49,7 +50,7 @@ export const FormsProvider = ({ children }) => {
     try {
       setLoading(true);
       const res = await fetch(
-        "http://localhost:3000/api/form/all-forms",
+        API_PATHS.FORMS.GET_ALL_FORMS,
         { credentials: "include" }
       );
       const data = await res.json();
@@ -67,7 +68,7 @@ export const FormsProvider = ({ children }) => {
   const shareForm = async (formId, userEmail) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/form/share-form/${formId}`,
+        API_PATHS.FORMS.SHARE_FORM(formId),
         {
           method: "PATCH",
           headers: {
@@ -97,7 +98,7 @@ export const FormsProvider = ({ children }) => {
   const getSharedForms = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/form/share/get-shared-forms",
+        API_PATHS.FORMS.GET_SHARED_FORMS,
         {
           method: "GET",
           credentials: "include",
@@ -126,7 +127,7 @@ export const FormsProvider = ({ children }) => {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:3000/api/form/get-form/${formId}`
+        API_PATHS.FORMS.GET_FORM_BY_FORMID(formId)
       );
       const data = await res.json();
       setFormById(data);
@@ -140,19 +141,16 @@ export const FormsProvider = ({ children }) => {
 
   const createFormsInsideProject = async (projectId) => {
     try {
-      const res = await fetch(
-        "http://localhost:3000/api/form/create-form",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            projectId,
-          }),
-        }
-      );
+      const res = await fetch(API_PATHS.FORMS.CREATE_FORM, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          projectId,
+        }),
+      });
       const data = await res.json();
       if (!res.ok) {
         throw new Error(
@@ -169,16 +167,13 @@ export const FormsProvider = ({ children }) => {
 
   const createStandaloneForm = async (navigate) => {
     try {
-      const res = await fetch(
-        "http://localhost:3000/api/form/create-form",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      const res = await fetch(API_PATHS.FORMS.CREATE_FORM, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
       const data = await res.json();
       navigate(`/form-page/${data._id}`);
       fetchAllForms();
@@ -191,14 +186,14 @@ export const FormsProvider = ({ children }) => {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:3000/api/form/update-form/${formId}`,
+        API_PATHS.FORMS.RENAME_FORM(formId),
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({ title }), // only send name
+          body: JSON.stringify({ title }),
         }
       );
       const data = await res.json();
@@ -223,10 +218,8 @@ export const FormsProvider = ({ children }) => {
 
   const deleteForm = async (formId, projectId) => {
     try {
-      console.log("FormId", formId);
-      console.log("projectId", projectId);
       const res = await fetch(
-        `http://localhost:3000/api/form/delete/${formId}`,
+        API_PATHS.FORMS.DELETE_FORM(formId),
         {
           method: "DELETE",
           credentials: "include",

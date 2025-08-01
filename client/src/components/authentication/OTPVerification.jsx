@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./authentication.css";
+import { API_PATHS } from "../../utils/apiPaths";
 function OTPVerification({ email }) {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
@@ -12,7 +13,7 @@ function OTPVerification({ email }) {
     setLoading(true);
     try {
       const res = await fetch(
-        "http://localhost:3000/api/auth/verify-reset-otp",
+        API_PATHS.AUTH.VERIFY_RESET_OTP,
         {
           method: "POST",
           headers: {

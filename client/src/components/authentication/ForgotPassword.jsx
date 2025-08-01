@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./authentication.css";
 import { toast } from "react-toastify";
+import { API_PATHS } from "../../utils/apiPaths";
 const ForgotPassword = ({ email, setEmail }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -12,7 +13,7 @@ const ForgotPassword = ({ email, setEmail }) => {
 
     try {
       const res = await fetch(
-        "http://localhost:3000/api/auth/send-reset-password-otp",
+        API_PATHS.AUTH.SEND_RESET_OTP,
         {
           method: "POST",
           headers: {

@@ -5,6 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { API_PATHS } from "../utils/apiPaths";
 
 const AuthContext = createContext();
 
@@ -15,13 +16,10 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const res = await fetch(
-        "http://localhost:3000/api/user/get-user",
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
+      const res = await fetch(API_PATHS.USER.GET_USER, {
+        method: "GET",
+        credentials: "include",
+      });
       const data = await res.json();
 
       if (data.success) {

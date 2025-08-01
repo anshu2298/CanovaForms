@@ -2,6 +2,7 @@
 import { createContext, useContext, useState } from "react";
 
 import { toast } from "react-toastify";
+import { API_PATHS } from "../utils/apiPaths";
 
 const FormCreationContext = createContext();
 
@@ -334,13 +335,10 @@ export const FormCreationProvider = ({ children }) => {
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await fetch(
-      "http://localhost:3000/api/media/upload",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const res = await fetch(API_PATHS.MEDIA.UPLOAD_MEDIA, {
+      method: "POST",
+      body: formData,
+    });
 
     const data = await res.json();
     return data.url;
@@ -475,7 +473,7 @@ export const FormCreationProvider = ({ children }) => {
   const createPageInForm = async (formId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/form/${formId}/add-page`,
+        API_PATHS.FORMS.ADD_PAGE(formId),
         {
           method: "POST",
           headers: {
@@ -534,7 +532,7 @@ export const FormCreationProvider = ({ children }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/form/save-form/${formState._id}`,
+        API_PATHS.FORMS.SAVE_FORM(formState._id),
         {
           method: "PUT",
           headers: {
@@ -563,7 +561,10 @@ export const FormCreationProvider = ({ children }) => {
   const deletePageFromForm = async (formId, pageId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/form/${formId}/delete-page/${pageId}`,
+        API_PATHS.FORMS.DELETE_PAGE_FROM_FORM(
+          formId,
+          pageId
+        ),
         {
           method: "DELETE",
         }

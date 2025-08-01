@@ -9,6 +9,7 @@ import { FiSettings } from "react-icons/fi";
 import { IoMdLogOut } from "react-icons/io";
 import { FiEdit3 } from "react-icons/fi";
 import { CiFolderOn } from "react-icons/ci";
+import { API_PATHS } from "../../utils/apiPaths";
 const Profile = () => {
   const { logout, user, refreshUser } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,7 @@ const Profile = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        "http://localhost:3000/api/user/update-profile",
+        API_PATHS.USER.UPDATE_PROFILE,
         {
           method: "PATCH",
           headers: {
@@ -85,7 +86,7 @@ const Profile = () => {
 
     try {
       const res = await fetch(
-        "http://localhost:3000/api/user/upload-profile-picture",
+        API_PATHS.USER.UPLOAD_PROFILE_PICTURE,
         {
           method: "POST",
           body: formData,
@@ -114,13 +115,10 @@ const Profile = () => {
 
   const logoutHandler = async () => {
     try {
-      const res = await fetch(
-        "http://localhost:3000/api/auth/logout",
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
+      const res = await fetch(API_PATHS.AUTH.LOGOUT, {
+        method: "POST",
+        credentials: "include",
+      });
 
       const data = await res.json();
       if (data.success) {

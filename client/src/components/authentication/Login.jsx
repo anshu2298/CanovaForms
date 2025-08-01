@@ -5,6 +5,7 @@ import { FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
+import { API_PATHS } from "../../utils/apiPaths";
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -32,8 +33,8 @@ const Login = () => {
 
     const url =
       authState === "login"
-        ? "http://localhost:3000/api/auth/login"
-        : "http://localhost:3000/api/auth/register";
+        ? API_PATHS.AUTH.LOGIN
+        : API_PATHS.AUTH.REGISTER;
 
     const payload =
       authState === "login"

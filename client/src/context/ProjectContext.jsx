@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import { toast } from "react-toastify";
+import { API_PATHS } from "../utils/apiPaths";
 const ProjectsContext = createContext();
 
 export const ProjectsProvider = ({ children }) => {
@@ -29,7 +30,7 @@ export const ProjectsProvider = ({ children }) => {
     try {
       setLoading(true);
       const res = await fetch(
-        "http://localhost:3000/api/project/all",
+        API_PATHS.PROJECTS.GET_ALL_PROJECT,
         {
           credentials: "include",
         }
@@ -51,7 +52,7 @@ export const ProjectsProvider = ({ children }) => {
   const createProject = async (projectName, formName) => {
     try {
       const res = await fetch(
-        "http://localhost:3000/api/project/create",
+        API_PATHS.PROJECTS.CREATE_PROJECT,
         {
           method: "POST",
           headers: {
@@ -82,7 +83,7 @@ export const ProjectsProvider = ({ children }) => {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:3000/api/project/update/${projectId}`,
+        API_PATHS.PROJECTS.UPDATE_PROJECT(projectId),
         {
           method: "PATCH",
           headers: {
@@ -114,7 +115,7 @@ export const ProjectsProvider = ({ children }) => {
   const deleteProject = async (projectId) => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/project/delete/${projectId}`,
+        API_PATHS.PROJECTS.DELETE_PROJECT(projectId),
         {
           method: "DELETE",
           credentials: "include",
@@ -141,7 +142,7 @@ export const ProjectsProvider = ({ children }) => {
   const shareProject = async (projectId, userEmail) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/project/share/${projectId}`,
+        API_PATHS.PROJECTS.SHARE_PROJECT(projectId),
         {
           method: "PATCH",
           headers: {
@@ -174,7 +175,7 @@ export const ProjectsProvider = ({ children }) => {
   const getSharedProjects = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/project/share/get-shared-projects",
+        API_PATHS.PROJECTS.GET_SHARED_PROJECTS,
         {
           method: "GET",
           credentials: "include",

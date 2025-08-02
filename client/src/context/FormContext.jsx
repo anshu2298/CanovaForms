@@ -131,7 +131,6 @@ export const FormsProvider = ({ children }) => {
       );
       const data = await res.json();
       setFormById(data);
-      console.log(data);
     } catch (err) {
       console.error("Failed to fetch forms", err);
     } finally {

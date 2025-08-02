@@ -196,13 +196,39 @@ const saveForm = async (req, res) => {
         .json({ message: "Form not found" });
     }
 
-    // Overwrite all top-level fields (title, pages, etc.)
+    // Update top-level fields
     existingForm.title =
       updatedFormData.title || existingForm.title;
-    existingForm.pages = updatedFormData.pages || [];
 
-    // You can also update project/user if needed:
-    // existingForm.project = updatedFormData.project || existingForm.project;
+    // Update pages by matching _id
+    if (
+      updatedFormData.pages &&
+      updatedFormData.pages.length
+    ) {
+      existingForm.pages = existingForm.pages.map(
+        (existingPage) => {
+          const updatedPage = updatedFormData.pages.find(
+            (p) => p._id === existingPage._id.toString()
+          );
+
+          if (!updatedPage) return existingPage; // No matching update, keep as is
+
+          // Merge fields while keeping existing _id
+          return {
+            ...existingPage.toObject(),
+            name: updatedPage.name || existingPage.name,
+            pageBackgroundColor:
+              updatedPage.pageBackgroundColor ||
+              existingPage.pageBackgroundColor,
+            pageBackgroundOpacity:
+              updatedPage.pageBackgroundOpacity ??
+              existingPage.pageBackgroundOpacity,
+            sections:
+              updatedPage.sections || existingPage.sections,
+          };
+        }
+      );
+    }
 
     await existingForm.save();
 

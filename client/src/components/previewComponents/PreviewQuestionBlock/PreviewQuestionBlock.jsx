@@ -1,11 +1,12 @@
 import { useRef, useState } from "react";
 import "./PreviewQuestionBlock.css";
+import { useFormCreation } from "../../../context/FormCreationContext";
 const PreviewQuestionBlock = ({
   data,
   questionCounter,
   onResponseChange,
 }) => {
-  console.log(data);
+  const { conditionsMode } = useFormCreation();
   const shortRef = useRef();
   const longRef = useRef();
   const sliderRef = useRef();
@@ -48,12 +49,19 @@ const PreviewQuestionBlock = ({
         return (
           <div className='preview-question-container'>
             <div className='question-component-header'>
-              <div className='question-number size'>
-                Q{questionCounter}
-              </div>
-              <label className='question-statemant size'>
-                {data.data.label}
-              </label>
+              <>
+                <div className='question-number size'>
+                  Q{questionCounter}
+                </div>
+                <label className='question-statemant size'>
+                  {data.data.label}
+                </label>
+              </>
+              {conditionsMode && (
+                <div className='mark-question'>
+                  <input type='checkbox' />
+                </div>
+              )}
             </div>
             <div className='preview-question-content'>
               <input

@@ -7,6 +7,7 @@ import { LiaClipboardListSolid } from "react-icons/lia";
 import { useFormCreation } from "../../context/FormCreationContext";
 import { useState } from "react";
 import FileUploadModal from "../fileUploadModal/FileUploadModal";
+import { toast } from "react-toastify";
 
 function FormToolbar() {
   const {
@@ -30,6 +31,7 @@ function FormToolbar() {
     addImageBlockToActiveSection,
     addVideoBlockToActiveSection,
     setConditionsMode,
+    conditionsMode,
   } = useFormCreation();
 
   const [isUploadModalOpen, setUploadModalOpen] =
@@ -88,6 +90,14 @@ function FormToolbar() {
       (async () => {
         await saveForm(formState);
         setConditionsMode((prev) => !prev);
+        if (!conditionsMode) {
+          toast.info(
+            "Conditions can only be applied to Multiple Choice questions.",
+            {
+              autoClose: 3000,
+            }
+          );
+        }
       })();
     }
   };

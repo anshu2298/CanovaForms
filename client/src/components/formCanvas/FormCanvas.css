@@ -68,6 +68,10 @@
   border-color: #adb5bd;
 }
 
+.preview-btn:disabled {
+  cursor: not-allowed;
+}
+
 .save-btn {
   padding: 10px 24px;
   border: none;
@@ -78,6 +82,10 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.save-btn:disabled {
+  cursor: not-allowed;
 }
 
 .save-btn:hover {

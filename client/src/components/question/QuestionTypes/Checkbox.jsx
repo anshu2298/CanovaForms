@@ -1,13 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./QuestionTypes.css";
-import { useFormCreation } from "../../../context/FormCreationContext";
 
 const Checkbox = ({ questionData, onUpdate }) => {
-  const { conditionsMode } = useFormCreation();
+  const nextOptionIdRef = useRef(Date.now());
   const [options, setOptions] = useState(() =>
     questionData.options?.length
       ? questionData.options
-      : [{ id: 1, text: "", checked: false }]
+      : [
+          {
+            id: `opt-${nextOptionIdRef.current++}`,
+            text: "",
+            checked: false,
+          },
+        ]
   );
 
   useEffect(() => {
@@ -31,11 +36,11 @@ const Checkbox = ({ questionData, onUpdate }) => {
     }
 
     const isLastOption =
-      id === Math.max(...updatedOptions.map((o) => o.id));
+      id === updatedOptions[updatedOptions.length - 1]?.id;
     if (isLastOption && newText.trim() !== "") {
+      // Generate a new unique id using the ref.
       const newOption = {
-        id:
-          Math.max(...updatedOptions.map((o) => o.id)) + 1,
+        id: `opt-${nextOptionIdRef.current++}`,
         text: "",
         selected: false,
       };

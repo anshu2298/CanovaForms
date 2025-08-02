@@ -171,9 +171,8 @@ export const FormCreationProvider = ({ children }) => {
       id: `question-${Date.now()}`,
       type: "question",
       data: {
-        questionType: "Multiple Choice", // default subtype
+        questionType: "Multiple Choice",
         label: "What is ..?",
-        required: false,
         options: [],
       },
     };
@@ -456,7 +455,6 @@ export const FormCreationProvider = ({ children }) => {
         ...page,
         active: page.active ?? index === 0,
       }));
-      // console.log(updatedPages);
     }
     setFormState({
       _id: formFromDB._id || "",
@@ -510,50 +508,43 @@ export const FormCreationProvider = ({ children }) => {
   };
 
   //  Save a Form.
-  const saveForm = async (formState) => {
-    // Sanitize the form state before sending
-    const cleanedForm = {
-      _id: formState._id,
-      title: formState.title,
-      user: formState.user,
-      project: formState.project,
-      pages: formState.pages.map((page) => ({
-        name: page.name,
-        pageBackgroundColor: page.pageBackgroundColor,
-        pageBackgroundOpacity: page.pageBackgroundOpacity,
-        sections: page.sections.map((section) => ({
-          id: section.id,
-          backgroundColor: section.backgroundColor,
-          backgroundOpacity: section.backgroundOpacity,
-          content: section.content,
-        })),
-      })),
-    };
-
+  const saveForm = async () => {
     try {
       const response = await fetch(
         API_PATHS.FORMS.SAVE_FORM(formState._id),
         {
-          method: "PUT",
+          method: "PUT", // or PATCH based on your route
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(cleanedForm),
+          body: JSON.stringify({
+            title: formState.title,
+            pages: formState.pages.map((page) => ({
+              _id: page._id, // ✅ ensure _id is sent
+              name: page.name,
+              pageBackgroundColor: page.pageBackgroundColor,
+              pageBackgroundOpacity:
+                page.pageBackgroundOpacity,
+              sections: page.sections.map((section) => ({
+                id: section.id,
+                backgroundColor: section.backgroundColor,
+                backgroundOpacity:
+                  section.backgroundOpacity,
+                content: section.content,
+              })),
+            })),
+          }),
         }
       );
 
-      if (!response.ok) {
-        throw new Error(
-          `Failed to save form. Status: ${response.status}`
-        );
-      }
-
       const data = await response.json();
-      console.log("Form saved successfully:", data);
-      return data;
+      if (response.ok) {
+        console.log("Form saved successfully", data);
+      } else {
+        console.error("Failed to save form:", data.message);
+      }
     } catch (error) {
       console.error("Error saving form:", error);
-      throw error;
     }
   };
 

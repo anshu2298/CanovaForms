@@ -1,7 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./SelectPageModal.css";
 
-const SelectPageModal = ({ isOpen, onClose, form }) => {
+const SelectPageModal = ({
+  isOpen,
+  onClose,
+  form,
+  conditionResponse,
+}) => {
+  const [conditions, setConditions] = useState([]);
+
+  useEffect(() => {
+    const multipleChoiceResponses =
+      conditionResponse.filter(
+        (response) =>
+          response.questionType === "Multiple Choice"
+      );
+    setConditions(multipleChoiceResponses);
+  }, [conditionResponse]);
+
   const [truePageSelection, setTruePageSelection] =
     useState("Page");
   const [falsePageSelection, setFalsePageSelection] =
@@ -10,13 +26,19 @@ const SelectPageModal = ({ isOpen, onClose, form }) => {
   if (!isOpen) return null;
 
   const handleContinue = () => {
-    console.log("Continue clicked", {
-      truePageSelection,
-      falsePageSelection,
-    });
+    const conditionBlock = {
+      conditions,
+      truePageId: truePageSelection,
+      falsePageId: falsePageSelection,
+    };
+    console.log(
+      "✅ Final Condition Block:",
+      conditionBlock
+    );
+    console.log("true", truePageSelection);
+    console.log("flase", falsePageSelection);
     onClose();
   };
-
   return (
     <div
       className='modal-backdrop'
@@ -64,7 +86,7 @@ const SelectPageModal = ({ isOpen, onClose, form }) => {
                   Select a page
                 </option>
                 {form.pages.slice(1).map((page) => {
-                  if (page._id === falsePageSelection)
+                  if (page.name === falsePageSelection)
                     return null;
                   return (
                     <option

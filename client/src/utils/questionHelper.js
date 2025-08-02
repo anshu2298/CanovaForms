@@ -23,26 +23,17 @@ export const getInitialQuestionData = (
     case "Multiple Choice":
       return {
         ...base,
-        options: [
-          { id: `opt-${Date.now()}`, text: "" },
-          { id: `opt-${Date.now() + 1}`, text: "" },
-        ],
+        options: [],
       };
     case "Checkboxes":
       return {
         ...base,
-        options: [
-          { id: `opt-${Date.now()}`, text: "" },
-          { id: `opt-${Date.now() + 1}`, text: "" },
-        ],
+        options: [],
       };
     case "Dropdown":
       return {
         ...base,
-        options: [
-          // { id: `opt-${Date.now()}`, text: "" },
-          // { id: `opt-${Date.now() + 1}`, text: "" },
-        ],
+        options: [],
       };
 
     case "Linear Scale":

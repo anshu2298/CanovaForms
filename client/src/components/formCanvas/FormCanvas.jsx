@@ -26,7 +26,7 @@ function FormCanvas({ title, onTitleChange }) {
   let questionCount = 0;
   const [responses, setResponses] = useState([]);
 
-  console.log(responses);
+  // console.log("condition response", responses);
 
   const handleResponseChange = (
     questionId,
@@ -69,9 +69,11 @@ function FormCanvas({ title, onTitleChange }) {
         />
         <div className='canvas-actions'>
           <button
+            disabled={conditionsMode}
             className='preview-btn'
             onClick={async () => {
               await saveForm(formState);
+              // setConditonsMode(false);
               navigate(`/preview/${formId}`);
             }}
           >
@@ -79,6 +81,7 @@ function FormCanvas({ title, onTitleChange }) {
           </button>
           <button
             className='save-btn'
+            disabled={conditionsMode}
             onClick={async () => {
               try {
                 await saveForm(formState);
@@ -103,7 +106,6 @@ function FormCanvas({ title, onTitleChange }) {
           {conditionsMode ? (
             <>
               {formByID.pages[0].sections.map((section) => {
-                console.log(section);
                 return (
                   <div
                     key={section.id}
@@ -200,6 +202,7 @@ function FormCanvas({ title, onTitleChange }) {
         isOpen={isModalOpen}
         form={formByID}
         onClose={() => setIsModalOpen(false)}
+        conditionResponse={responses}
       />
     </div>
   );

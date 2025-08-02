@@ -1,13 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./QuestionTypes.css";
-import { useFormCreation } from "../../../context/FormCreationContext";
 
 const Dropdown = ({ questionData, onUpdate }) => {
-  const { conditionsMode } = useFormCreation();
+  const nextOptionIdRef = useRef(Date.now());
   const [options, setOptions] = useState(() =>
     questionData.options?.length
       ? questionData.options
-      : [{ id: 1, text: "", checked: false }]
+      : [
+          {
+            id: `opt-${nextOptionIdRef.current++}`,
+            text: "",
+          },
+        ]
   );
 
   useEffect(() => {
@@ -31,19 +35,19 @@ const Dropdown = ({ questionData, onUpdate }) => {
     }
 
     const isLastOption =
-      id === Math.max(...updatedOptions.map((o) => o.id));
+      id === updatedOptions[updatedOptions.length - 1]?.id;
     if (isLastOption && newText.trim() !== "") {
+      // Generate a new unique id using the ref.
       const newOption = {
-        id:
-          Math.max(...updatedOptions.map((o) => o.id)) + 1,
+        id: `opt-${nextOptionIdRef.current++}`,
         text: "",
-        selected: false,
       };
       updatedOptions.push(newOption);
     }
 
     setOptions(updatedOptions);
   };
+
   const handleKeyDown = (e, option) => {
     if (
       e.key === "Backspace" &&
@@ -56,6 +60,7 @@ const Dropdown = ({ questionData, onUpdate }) => {
       );
     }
   };
+
   return (
     <div className='question-type'>
       <div className='options-list'>

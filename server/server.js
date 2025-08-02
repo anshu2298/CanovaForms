@@ -14,10 +14,13 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // const allowedOrigins = ["http://localhost:5173"];
+// const allowedOrigins = [
+//   "https://canovaforms-frontend.onrender.com",
+// ];
 const allowedOrigins = [
-  "https://canovaforms-frontend.onrender.com",
+  "https://canova-forms-frontend.vercel.app",
 ];
-app.use(express.json());
+https: app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({ origin: allowedOrigins, credentials: true })

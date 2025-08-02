@@ -38,9 +38,9 @@ const App = () => {
         {/* Auth Routes */}
         <Route
           element={
-            // <RedirectIfAuth>
-            <AuthenticationLayout />
-            // </RedirectIfAuth>
+            <RedirectIfAuth>
+              <AuthenticationLayout />
+            </RedirectIfAuth>
           }
         >
           <Route
@@ -74,9 +74,9 @@ const App = () => {
         <Route
           path='/dashboard'
           element={
-            // <RequireAuth>
-            <DashboardLayout />
-            // </RequireAuth>
+            <RequireAuth>
+              <DashboardLayout />
+            </RequireAuth>
           }
         >
           <Route
@@ -105,9 +105,9 @@ const App = () => {
         <Route
           path='/form-page/:formId'
           element={
-            // <RequireAuth>
-            <BuildFormPage />
-            // </RequireAuth>
+            <RequireAuth>
+              <BuildFormPage />
+            </RequireAuth>
           }
         />
         <Route
@@ -119,9 +119,9 @@ const App = () => {
         <Route
           path='/profile'
           element={
-            // <RequireAuth>
-            <Profile />
-            // </RequireAuth>
+            <RequireAuth>
+              <Profile />
+            </RequireAuth>
           }
         />
         <Route

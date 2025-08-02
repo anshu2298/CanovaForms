@@ -21,7 +21,7 @@ export const API_PATHS = {
       `${BASE_URL}/project/delete/${projectId}`,
     SHARE_PROJECT: (projectId) =>
       `${BASE_URL}/project/share/${projectId}`,
-    GET_SHARED_PROJECTS: `${BASE_URL}/share/get-shared-projects`,
+    GET_SHARED_PROJECTS: `${BASE_URL}/project/share/get-shared-projects`,
     UPDATE_PROJECT: (projectId) =>
       `${BASE_URL}/project/update/${projectId}`,
     GET_ALL_PROJECT: `${BASE_URL}/project/all`,

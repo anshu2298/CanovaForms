@@ -20,7 +20,7 @@ const port = process.env.PORT || 3000;
 const allowedOrigins = [
   "https://canova-forms-frontend.vercel.app",
 ];
-https: app.use(express.json());
+app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({ origin: allowedOrigins, credentials: true })

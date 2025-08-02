@@ -36,7 +36,8 @@ export const API_PATHS = {
       `${BASE_URL}/form/save-form/${formId}`,
     GET_FORMS_INSIDE_PROJECT: (projectId) =>
       `${BASE_URL}/form/${projectId}`,
-    DELETE_FORM: (formId) => `${BASE_URL}/delete/${formId}`,
+    DELETE_FORM: (formId) =>
+      `${BASE_URL}/form/delete/${formId}`,
     DELETE_PAGE_FROM_FORM: (formId, pageId) =>
       `${BASE_URL}/form/${formId}/delete-page/${pageId}`,
     SHARE_FORM: (formId) =>

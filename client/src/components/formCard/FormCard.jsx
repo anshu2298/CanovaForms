@@ -51,6 +51,9 @@ const FormCard = ({ form, draft }) => {
           />
         ) : (
           <p className='project-title'>{form.title}</p>
+        )}{" "}
+        {form.isDraft && (
+          <span style={{ color: "gray" }}> (Draft)</span>
         )}
       </div>
       <Link

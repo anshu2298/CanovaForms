@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import "./SelectPageModal.css";
+import { API_PATHS } from "../../utils/apiPaths";
+import { toast } from "react-toastify";
+import { useFormCreation } from "../../context/FormCreationContext";
 
 const SelectPageModal = ({
   isOpen,
@@ -8,6 +11,7 @@ const SelectPageModal = ({
   conditionResponse,
 }) => {
   const [conditions, setConditions] = useState([]);
+  const { setConditionsMode } = useFormCreation();
 
   useEffect(() => {
     const multipleChoiceResponses =
@@ -25,20 +29,53 @@ const SelectPageModal = ({
 
   if (!isOpen) return null;
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     const conditionBlock = {
       conditions,
       truePageId: truePageSelection,
       falsePageId: falsePageSelection,
     };
-    console.log(
-      "✅ Final Condition Block:",
-      conditionBlock
-    );
-    console.log("true", truePageSelection);
-    console.log("flase", falsePageSelection);
+
+    if (
+      truePageSelection === "Page" &&
+      falsePageSelection === "Page"
+    ) {
+      toast.error("Select the pages to redirect");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        API_PATHS.FORMS.ADD_CONDITION(form._id),
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(conditionBlock),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(
+          data.error || "Failed to save condition"
+        );
+      }
+
+      toast.success("Conditions Added");
+      setConditionsMode(false);
+    } catch (err) {
+      console.error(
+        "❌ Error saving condition:",
+        err.message
+      );
+    }
+
     onClose();
   };
+
   return (
     <div
       className='modal-backdrop'

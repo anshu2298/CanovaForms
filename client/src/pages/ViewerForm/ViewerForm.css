@@ -1,3 +1,27 @@
 .view-form-container {
   padding: 20px;
+  position: relative;
+  height: 100vh;
+}
+
+.next-page-btn {
+  position: fixed;
+  right: 50px;
+  bottom: 40px;
+  width: 100px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background-color: #000;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease,
+    transform 0.1s ease;
+}
+.next-page-btn:hover {
+  background-color: #4b4b4c;
+}
+
+.next-page-btn:active {
+  transform: scale(0.97);
 }

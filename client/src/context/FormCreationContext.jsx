@@ -464,6 +464,8 @@ export const FormCreationProvider = ({ children }) => {
       pages: updatedPages,
       user: formFromDB.user,
       project: formFromDB.project,
+      conditionalLogic: formFromDB.conditionalLogic || {},
+      isDraft: formFromDB.isDraft,
     });
   };
 
@@ -526,6 +528,7 @@ export const FormCreationProvider = ({ children }) => {
               pageBackgroundOpacity:
                 page.pageBackgroundOpacity,
               sections: page.sections.map((section) => ({
+                _id: section._id,
                 id: section.id,
                 backgroundColor: section.backgroundColor,
                 backgroundOpacity:

@@ -1,0 +1,17 @@
+.publish-page {
+  overflow: hidden;
+  display: flex;
+  height: 100vh;
+  background-color: #ffffff;
+}
+.publish-canvas {
+  flex: 1;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  margin: 5px;
+  border-radius: 12px;
+  height: 100vh;
+  overflow-y: auto;
+}

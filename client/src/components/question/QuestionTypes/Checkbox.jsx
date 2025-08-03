@@ -42,7 +42,7 @@ const Checkbox = ({ questionData, onUpdate }) => {
       const newOption = {
         id: `opt-${nextOptionIdRef.current++}`,
         text: "",
-        selected: false,
+        checked: false,
       };
       updatedOptions.push(newOption);
     }

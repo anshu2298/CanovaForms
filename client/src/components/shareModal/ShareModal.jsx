@@ -10,6 +10,7 @@ const ShareModal = ({
   share,
   email,
   setEmail,
+  formDeployedLink,
 }) => {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -41,12 +42,23 @@ const ShareModal = ({
         </div>
         <div className='share-modal-body'>
           {itemType === "form" && (
-            <div className='share-link-container'>
-              <FaLink
-                size={23}
-                color='#69B5F8'
-              />
-              <p>Copy the Link</p>
+            <div>
+              <p className='link-subtext'>
+                copy link to share form
+              </p>
+              <div className='share-link-container'>
+                <FaLink
+                  onClick={() =>
+                    window.open(formDeployedLink, "_blank")
+                  }
+                  style={{ cursor: "pointer" }}
+                  size={23}
+                  color='#69B5F8'
+                />
+                <p className='deployed-link'>
+                  {formDeployedLink}
+                </p>
+              </div>
             </div>
           )}
           <div className='share-email-container'>

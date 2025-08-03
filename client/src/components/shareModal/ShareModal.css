@@ -123,3 +123,15 @@
   transform: none;
   box-shadow: none;
 }
+
+.deployed-link {
+  color: #42a5f5;
+  text-decoration: underline;
+  font-size: small;
+}
+
+.link-subtext {
+  text-align: start;
+  font-size: 12px;
+  display: inline;
+}

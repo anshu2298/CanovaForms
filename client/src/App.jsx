@@ -23,6 +23,7 @@ import BuildFormPage from "./pages/Forms/BuildFormPage";
 import Forms from "./pages/DashboardLayout/Forms/Forms";
 import Preview from "./pages/PreviewPage/Preview";
 import ViewerForm from "./pages/ViewerForm/ViewerForm";
+import Publish from "./pages/Publish/Publish";
 
 const App = () => {
   const [email, setEmail] = useState("");
@@ -107,6 +108,14 @@ const App = () => {
           element={
             <RequireAuth>
               <BuildFormPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path='/publish/:formId'
+          element={
+            <RequireAuth>
+              <Publish />
             </RequireAuth>
           }
         />

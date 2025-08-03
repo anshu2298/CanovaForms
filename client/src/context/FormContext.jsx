@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { API_PATHS } from "../utils/apiPaths";
+import { useAuth } from "./AuthContext";
 const FormContext = createContext();
 
 export const FormsProvider = ({ children }) => {
@@ -13,6 +14,7 @@ export const FormsProvider = ({ children }) => {
   const [standaloneForms, setStandaloneForms] = useState(
     []
   );
+  const { isAuthenticated } = useAuth();
   const [sharedForms, setSharedForms] = useState([]);
 
   const [formSearchQuery, setFormSearchQuery] =
@@ -75,7 +77,7 @@ export const FormsProvider = ({ children }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ userEmail }),
-          credentials: "include", // if you're using cookies for auth
+          credentials: "include",
         }
       );
 
@@ -242,9 +244,11 @@ export const FormsProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchAllForms();
-    getSharedForms();
-  }, []);
+    if (isAuthenticated) {
+      fetchAllForms();
+      getSharedForms();
+    }
+  }, [isAuthenticated]);
 
   return (
     <FormContext.Provider

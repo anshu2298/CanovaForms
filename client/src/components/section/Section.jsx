@@ -83,6 +83,7 @@ function Section({ section, pageId }) {
                   key={block.id}
                   questionData={block.data}
                   questionNumber={questionCounter}
+                  questionId={block.id}
                   onUpdate={(newData) =>
                     handleQuestionChange(block.id, newData)
                   }

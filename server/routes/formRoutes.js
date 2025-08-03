@@ -13,6 +13,7 @@ const {
   saveForm,
   getSharedFormsForUser,
   shareForm,
+  saveCondition,
 } = require("../controllers/formController");
 
 formsRouter.get("/all-forms", userAuth, getAllForms);
@@ -23,6 +24,8 @@ formsRouter.get(
   userAuth,
   getFormsByProjectId
 );
+
+formsRouter.patch("/add-condition/:formId", saveCondition);
 //DELETE
 formsRouter.delete("/delete/:formId", userAuth, deleteForm);
 formsRouter.delete(

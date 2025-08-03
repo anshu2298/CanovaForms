@@ -81,6 +81,11 @@ const createForm = async (req, res) => {
       ...(formName && { title: formName }),
       project: projectId || null,
       user: userId,
+      conditionalLogic: {
+        conditions: [],
+        truePageId: "",
+        falsePageId: "",
+      },
     });
 
     if (projectId) {
@@ -189,7 +194,6 @@ const saveForm = async (req, res) => {
 
   try {
     const existingForm = await Form.findById(formId);
-
     if (!existingForm) {
       return res
         .status(404)
@@ -200,7 +204,7 @@ const saveForm = async (req, res) => {
     existingForm.title =
       updatedFormData.title || existingForm.title;
 
-    // Update pages by matching _id
+    // Update pages
     if (
       updatedFormData.pages &&
       updatedFormData.pages.length
@@ -211,20 +215,63 @@ const saveForm = async (req, res) => {
             (p) => p._id === existingPage._id.toString()
           );
 
-          if (!updatedPage) return existingPage; // No matching update, keep as is
+          if (!updatedPage) return existingPage;
 
-          // Merge fields while keeping existing _id
+          // Handle section merging logic
+          const existingSections =
+            existingPage.sections || [];
+          const updatedSections =
+            updatedPage.sections || [];
+          const mergedSections = [];
+
+          for (const updatedSection of updatedSections) {
+            const match = existingSections.find(
+              (s) =>
+                s._id?.toString() === updatedSection._id ||
+                s.id === updatedSection.id
+            );
+
+            if (match) {
+              // Update existing section
+              mergedSections.push({
+                ...(match.toObject?.() || match),
+                backgroundColor:
+                  updatedSection.backgroundColor ??
+                  match.backgroundColor,
+                backgroundOpacity:
+                  updatedSection.backgroundOpacity ??
+                  match.backgroundOpacity,
+                content:
+                  updatedSection.content ?? match.content,
+                id: match.id || match._id.toString(), // Ensure `id` is present
+                _id: match._id,
+              });
+            } else {
+              // Add new section with new _id and id
+              const newSectionId =
+                new mongoose.Types.ObjectId();
+              mergedSections.push({
+                _id: newSectionId,
+                id: newSectionId.toString(),
+                backgroundColor:
+                  updatedSection.backgroundColor,
+                backgroundOpacity:
+                  updatedSection.backgroundOpacity,
+                content: updatedSection.content,
+              });
+            }
+          }
+
           return {
             ...existingPage.toObject(),
             name: updatedPage.name || existingPage.name,
             pageBackgroundColor:
-              updatedPage.pageBackgroundColor ||
+              updatedPage.pageBackgroundColor ??
               existingPage.pageBackgroundColor,
             pageBackgroundOpacity:
               updatedPage.pageBackgroundOpacity ??
               existingPage.pageBackgroundOpacity,
-            sections:
-              updatedPage.sections || existingPage.sections,
+            sections: mergedSections,
           };
         }
       );
@@ -241,6 +288,47 @@ const saveForm = async (req, res) => {
     res.status(500).json({
       message: "Server error while updating form",
     });
+  }
+};
+
+// ADD CONDITIONS
+
+const saveCondition = async (req, res) => {
+  const { formId } = req.params;
+  const { conditions, truePageId, falsePageId } = req.body;
+
+  if (!Array.isArray(conditions)) {
+    return res
+      .status(400)
+      .json({ error: "Conditions must be an array." });
+  }
+
+  try {
+    const form = await Form.findById(formId);
+
+    if (!form) {
+      return res
+        .status(404)
+        .json({ error: "Form not found." });
+    }
+
+    form.conditionalLogic = {
+      conditions,
+      truePageId,
+      falsePageId,
+    };
+
+    await form.save();
+
+    res.status(200).json({
+      message: "Conditional logic saved successfully.",
+      conditionalLogic: form.conditionalLogic,
+    });
+  } catch (err) {
+    console.error("Error saving condition:", err);
+    res
+      .status(500)
+      .json({ error: "Internal server error." });
   }
 };
 
@@ -387,4 +475,5 @@ module.exports = {
   saveForm,
   shareForm,
   getSharedFormsForUser,
+  saveCondition,
 };

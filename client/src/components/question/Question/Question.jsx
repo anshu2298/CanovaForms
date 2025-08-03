@@ -28,7 +28,9 @@ const Question = ({
   onUpdate,
   onDelete,
   questionNumber,
+  questionId,
 }) => {
+  // console.log(questionData);
   const [label, setLabel] = useState(questionData.label);
   const [questionType, setQuestionType] = useState(
     questionData.questionType
@@ -79,6 +81,7 @@ const Question = ({
     const sharedProps = {
       questionData,
       onUpdate: handleChildUpdate,
+      questionId,
     };
 
     switch (questionType) {

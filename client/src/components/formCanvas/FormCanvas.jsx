@@ -15,6 +15,7 @@ function FormCanvas({ title, onTitleChange }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const { formId } = useParams();
+  const { fetchFormsById, formByID } = useForms();
   const {
     activePage,
     hexToRGBA,
@@ -25,9 +26,6 @@ function FormCanvas({ title, onTitleChange }) {
 
   let questionCount = 0;
   const [responses, setResponses] = useState([]);
-
-  // console.log("condition response", responses);
-
   const handleResponseChange = (
     questionId,
     responseObj
@@ -46,8 +44,6 @@ function FormCanvas({ title, onTitleChange }) {
       }
     });
   };
-
-  const { fetchFormsById, formByID } = useForms();
 
   useEffect(() => {
     fetchFormsById(formId);
@@ -73,7 +69,6 @@ function FormCanvas({ title, onTitleChange }) {
             className='preview-btn'
             onClick={async () => {
               await saveForm(formState);
-              // setConditonsMode(false);
               navigate(`/preview/${formId}`);
             }}
           >

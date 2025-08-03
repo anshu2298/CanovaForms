@@ -54,18 +54,6 @@ const VideoBlockSchema = new mongoose.Schema({
   },
 });
 
-const QuestionResponseSchema = new mongoose.Schema({
-  questionId: String,
-  questionType: String,
-  label: String,
-  answer: mongoose.Schema.Types.Mixed,
-});
-
-const PageResponseSchema = new mongoose.Schema({
-  pageId: String,
-  questionResponses: [QuestionResponseSchema],
-});
-
 const SectionSchema = new mongoose.Schema({
   id: String,
   backgroundColor: {
@@ -102,6 +90,7 @@ const PageSchema = new mongoose.Schema({
 
 const FormSchema = new mongoose.Schema(
   {
+    isDraft: { type: Boolean, default: true },
     title: {
       type: String,
       default: "Untitled Form",
@@ -116,7 +105,20 @@ const FormSchema = new mongoose.Schema(
       ref: "Project",
     },
     pages: [PageSchema],
-    userResponses: [PageResponseSchema],
+    conditionalLogic: {
+      type: {
+        conditions: [
+          {
+            questionId: String,
+            questionType: String,
+            label: String,
+            answer: String,
+          },
+        ],
+        truePageId: String,
+        falsePageId: String,
+      },
+    },
   },
   { timestamps: true }
 );

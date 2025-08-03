@@ -1,33 +1,15 @@
 import "./UserForm.css";
-import { useState } from "react";
 import PreviewImageBlock from "../previewComponents/PreviewImageBlock/PreviewImageBlock";
 import PreviewQuestionBlock from "../previewComponents/PreviewQuestionBlock/PreviewQuestionBlock";
 import PreviewVideoBlock from "../previewComponents/PreviewVideoBlock/PreviewVideoBlock";
 import PreviewTextBlock from "../previewComponents/PreviewTextBlock/PreviewTextBlock";
-const UserForm = ({ title, currentPage }) => {
+const UserForm = ({
+  title,
+  currentPage,
+  handleResponseChange,
+}) => {
   let questionCount = 0;
-  const [responses, setResponses] = useState([]);
 
-  const handleResponseChange = (
-    questionId,
-    responseObj
-  ) => {
-    setResponses((prev) => {
-      const existingIndex = prev.findIndex(
-        (r) => r.questionId === questionId
-      );
-
-      if (existingIndex !== -1) {
-        const updated = [...prev];
-        updated[existingIndex] = responseObj;
-        return updated;
-      } else {
-        return [...prev, responseObj];
-      }
-    });
-  };
-
-  console.log("Collected Responses:", responses); // 👈 Logs user input
   return (
     <div
       className='preview-page'

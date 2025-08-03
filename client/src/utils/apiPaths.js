@@ -49,6 +49,8 @@ export const API_PATHS = {
     GET_FORM_BY_FORMID: (formId) =>
       `${BASE_URL}/form/get-form/${formId}`,
     CREATE_FORM: `${BASE_URL}/form/create-form`,
+    ADD_CONDITION: (formId) =>
+      `${BASE_URL}/form/add-condition/${formId}`,
   },
   MEDIA: {
     UPLOAD_MEDIA: `${BASE_URL}/media/upload`,

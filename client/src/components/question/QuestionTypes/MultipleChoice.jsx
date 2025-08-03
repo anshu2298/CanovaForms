@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import "./QuestionTypes.css";
 
-const MultipleChoice = ({ questionData, onUpdate }) => {
+const MultipleChoice = ({
+  questionData,
+  onUpdate,
+  questionId,
+}) => {
   const nextOptionIdRef = useRef(Date.now());
   const [options, setOptions] = useState(() =>
     questionData.options?.length
@@ -14,6 +18,8 @@ const MultipleChoice = ({ questionData, onUpdate }) => {
           },
         ]
   );
+
+  // console.log(questionData);
 
   useEffect(() => {
     onUpdate?.({ options });
@@ -84,7 +90,7 @@ const MultipleChoice = ({ questionData, onUpdate }) => {
             <div className='option-input-group'>
               <input
                 type='radio'
-                name={`question-${questionData.id}`}
+                name={`question-${questionId}`}
                 checked={option.selected}
                 onChange={() => selectOption(option.id)}
                 className='option-radio'

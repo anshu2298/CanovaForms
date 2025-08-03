@@ -88,6 +88,7 @@ function DropdownMenu({
         email={email}
         setEmail={setEmail}
         share={() => share(itemId, email)}
+        formDeployedLink={`http://localhost:5173/view-form/${itemId}`}
       />
     </div>
   );

@@ -7,6 +7,7 @@ import {
 } from "react";
 import { toast } from "react-toastify";
 import { API_PATHS } from "../utils/apiPaths";
+import { useAuth } from "./AuthContext";
 const ProjectsContext = createContext();
 
 export const ProjectsProvider = ({ children }) => {
@@ -15,7 +16,7 @@ export const ProjectsProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [projectSearchQuery, setProjectSearchQuery] =
     useState("");
-
+  const { isAuthenticated } = useAuth();
   const allProjects = [...projects, ...sharedProjects];
 
   const filteredProjects = Array.isArray(allProjects)
@@ -204,9 +205,11 @@ export const ProjectsProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchProjects();
-    getSharedProjects();
-  }, []);
+    if (isAuthenticated) {
+      fetchProjects();
+      getSharedProjects();
+    }
+  }, [isAuthenticated]);
 
   return (
     <ProjectsContext.Provider

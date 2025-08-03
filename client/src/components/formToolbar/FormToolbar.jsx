@@ -8,6 +8,7 @@ import { useFormCreation } from "../../context/FormCreationContext";
 import { useState } from "react";
 import FileUploadModal from "../fileUploadModal/FileUploadModal";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function FormToolbar() {
   const {
@@ -19,8 +20,6 @@ function FormToolbar() {
     setSectionOpacity,
     setSectionColorById,
     pageColor,
-    saveForm,
-    formState,
     pageOpacity,
     setPageColor,
     setPageOpacity,
@@ -32,7 +31,11 @@ function FormToolbar() {
     addVideoBlockToActiveSection,
     setConditionsMode,
     conditionsMode,
+    saveForm,
+    formState,
   } = useFormCreation();
+
+  const navigate = useNavigate();
 
   const [isUploadModalOpen, setUploadModalOpen] =
     useState(false);
@@ -88,8 +91,9 @@ function FormToolbar() {
     }
     if (itemId === "condition") {
       (async () => {
-        await saveForm(formState);
         setConditionsMode((prev) => !prev);
+        console.log(conditionsMode);
+        await saveForm(formState);
         if (!conditionsMode) {
           toast.info(
             "Conditions can only be applied to Multiple Choice questions.",
@@ -261,7 +265,22 @@ function FormToolbar() {
         </div>
 
         <div className='toolbar-footer'>
-          <button className='next-btn'>Next</button>
+          <button
+            disabled={conditionsMode}
+            onClick={() => {
+              if (
+                formState.conditionalLogic.conditions
+                  .length === 0
+              ) {
+                toast.error("Add a condition first");
+                return;
+              }
+              navigate(`/publish/${formState._id}`);
+            }}
+            className='next-btn'
+          >
+            Next
+          </button>
         </div>
       </div>
       <FileUploadModal

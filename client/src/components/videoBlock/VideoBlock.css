@@ -1,6 +1,6 @@
 .video-block {
   padding: 12px;
-  background-color: #f9fafb;
+  background-color: transparent;
   border: 1px dashed #ced4da;
   border-radius: 8px;
   text-align: center;
@@ -8,7 +8,7 @@
 
 .video-player {
   border-radius: 8px;
-  width: 830px;
+  width: 100%;
 }
 
 .video-placeholder {

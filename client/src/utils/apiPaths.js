@@ -1,6 +1,11 @@
 const BASE_URL =
   "https://canovaforms-backend.onrender.com/api";
+export const CLIENT_URL =
+  "https://canova-forms-frontend.vercel.app";
+
 // const BASE_URL = "http://localhost:3000/api";
+// export const CLIENT_URL = "http://localhost:5173";
+
 export const API_PATHS = {
   AUTH: {
     LOGIN: `${BASE_URL}/auth/login`,
@@ -51,6 +56,10 @@ export const API_PATHS = {
     CREATE_FORM: `${BASE_URL}/form/create-form`,
     ADD_CONDITION: (formId) =>
       `${BASE_URL}/form/add-condition/${formId}`,
+    PUBLISH_FORM: (formId) =>
+      `${BASE_URL}/form/publish-form/${formId}`,
+    MOVE_FORM_TO_PROJECT: (formId) =>
+      `${BASE_URL}/form/move-form-to-project/${formId}`,
   },
   MEDIA: {
     UPLOAD_MEDIA: `${BASE_URL}/media/upload`,

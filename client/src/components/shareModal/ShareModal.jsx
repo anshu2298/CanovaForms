@@ -11,6 +11,7 @@ const ShareModal = ({
   email,
   setEmail,
   formDeployedLink,
+  access,
 }) => {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -41,7 +42,7 @@ const ShareModal = ({
           </button>
         </div>
         <div className='share-modal-body'>
-          {itemType === "form" && (
+          {access === "Anyone" && (
             <div>
               <p className='link-subtext'>
                 copy link to share form

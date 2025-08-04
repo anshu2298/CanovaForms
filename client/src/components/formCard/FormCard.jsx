@@ -4,9 +4,11 @@ import "./FormCard.css";
 import { useRef, useState } from "react";
 import DropdownMenu from "../dropdownMenu/DropdownMenu";
 import { useForms } from "../../context/FormContext";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 const FormCard = ({ form }) => {
   const { projectId } = useParams();
+  const navigate = useNavigate();
   const { deleteForm, updateForms, shareForm } = useForms();
   const [isSharing, setIsSharing] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] =
@@ -52,13 +54,21 @@ const FormCard = ({ form }) => {
         ) : (
           <p className='project-title'>{form.title}</p>
         )}{" "}
-        {form.isDraft && (
+        {!form.isPublished && (
           <span style={{ color: "gray" }}> (Draft)</span>
         )}
       </div>
-      <Link
+      <div
         className='form-link'
-        to={`/form-page/${form._id}`}
+        onClick={() => {
+          if (form.isPublished) {
+            toast.info(
+              "This form is already published and can't be edited."
+            );
+          } else {
+            navigate(`/form-page/${form._id}`);
+          }
+        }}
       >
         <div className='form-tab-body'>
           <RiEdit2Fill
@@ -66,13 +76,13 @@ const FormCard = ({ form }) => {
             size={50}
           />
         </div>
-      </Link>
+      </div>
       <div
         className={`form-tab-footer ${
-          form.isDraft ? "no-analysis" : ""
+          !form.isPublished ? "no-analysis" : ""
         }`}
       >
-        {!form.isDraft && (
+        {form.isPublished && (
           <button className='view-analysis-btn'>
             View Analysis
           </button>
@@ -104,6 +114,7 @@ const FormCard = ({ form }) => {
               isSharing={isSharing}
               setIsSharing={setIsSharing}
               share={shareForm}
+              access={form.access}
             />
           )}
         </div>

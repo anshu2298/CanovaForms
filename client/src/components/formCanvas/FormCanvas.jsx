@@ -164,19 +164,28 @@ function FormCanvas({ title, onTitleChange }) {
             </>
           ) : (
             <>
-              {activePage.sections?.length > 0 ? (
-                activePage.sections.map((section) => (
-                  <Section
-                    key={`${section.id}-${section.content?.length}`}
-                    section={section}
-                    pageId={activePage._id}
-                  />
-                ))
+              {activePage &&
+              Array.isArray(activePage.sections) ? (
+                activePage.sections.length > 0 ? (
+                  activePage.sections.map((section) => (
+                    <Section
+                      key={`${section.id}-${section.content?.length}`}
+                      section={section}
+                      pageId={activePage._id}
+                    />
+                  ))
+                ) : (
+                  <div className='empty-canvas'>
+                    <p>
+                      Add a new section to start building.
+                    </p>
+                  </div>
+                )
               ) : (
                 <div className='empty-canvas'>
                   <p>
-                    Add a New Section to start Building your
-                    Form.
+                    No pages found. Please create a new page
+                    to begin building your form.
                   </p>
                 </div>
               )}

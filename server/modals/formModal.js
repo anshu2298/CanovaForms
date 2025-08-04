@@ -90,7 +90,11 @@ const PageSchema = new mongoose.Schema({
 
 const FormSchema = new mongoose.Schema(
   {
-    isDraft: { type: Boolean, default: true },
+    isPublished: { type: Boolean, default: false },
+    access: {
+      type: String,
+      enum: ["Anyone", "Restricted"],
+    },
     title: {
       type: String,
       default: "Untitled Form",

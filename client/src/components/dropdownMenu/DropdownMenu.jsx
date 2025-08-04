@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import "./DropdownMenu.css";
 import ShareModal from "../shareModal/ShareModal";
+import { CLIENT_URL } from "../../utils/apiPaths";
 function DropdownMenu({
   isOpen,
   onClose,
@@ -10,6 +11,7 @@ function DropdownMenu({
   isSharing,
   setIsSharing,
   share,
+  access,
 }) {
   const [email, setEmail] = useState("");
   const menuRef = useRef(null);
@@ -88,7 +90,8 @@ function DropdownMenu({
         email={email}
         setEmail={setEmail}
         share={() => share(itemId, email)}
-        formDeployedLink={`https://canova-forms-frontend.vercel.app//view-form/${itemId}`}
+        formDeployedLink={`${CLIENT_URL}/view-form/${itemId}`}
+        access={access}
       />
     </div>
   );

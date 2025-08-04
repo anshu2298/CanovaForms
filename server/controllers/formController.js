@@ -291,8 +291,81 @@ const saveForm = async (req, res) => {
   }
 };
 
-// ADD CONDITIONS
+// Publish a form
+const publishForm = async (req, res) => {
+  try {
+    const { formId } = req.params;
+    const { access } = req.body;
 
+    // Validate access value
+    if (!["Anyone", "Restricted"].includes(access)) {
+      return res.status(400).json({
+        error:
+          "Invalid access value. Must be 'Anyone' or 'Restricted'.",
+      });
+    }
+
+    const form = await Form.findById(formId);
+    if (!form) {
+      return res
+        .status(404)
+        .json({ error: "Form not found" });
+    }
+
+    form.isPublished = true;
+    form.access = access;
+
+    await form.save();
+
+    res.status(200).json({
+      message: "Form published successfully",
+      form,
+    });
+  } catch (error) {
+    console.error("Error publishing form:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error" });
+  }
+};
+
+// ADD FORM TO A PROJECT
+const assignFormToProject = async (req, res) => {
+  try {
+    const { formId } = req.params;
+    const { projectId } = req.body;
+
+    if (!projectId) {
+      return res
+        .status(400)
+        .json({ error: "Project ID is required" });
+    }
+
+    const form = await Form.findById(formId);
+    if (!form) {
+      return res
+        .status(404)
+        .json({ error: "Form not found" });
+    }
+
+    form.project = projectId;
+    await form.save();
+
+    res.status(200).json({
+      message: "Form assigned to project successfully",
+    });
+  } catch (error) {
+    console.error(
+      "Error assigning form to project:",
+      error
+    );
+    res
+      .status(500)
+      .json({ error: "Internal server error" });
+  }
+};
+
+// ADD CONDITIONS
 const saveCondition = async (req, res) => {
   const { formId } = req.params;
   const { conditions, truePageId, falsePageId } = req.body;
@@ -476,4 +549,6 @@ module.exports = {
   shareForm,
   getSharedFormsForUser,
   saveCondition,
+  publishForm,
+  assignFormToProject,
 };

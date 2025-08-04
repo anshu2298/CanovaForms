@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import FormSidebar from "../../components/formSidebar/FormSidebar";
-
 import { useEffect, useState } from "react";
 import { useForms } from "../../context/FormContext";
 import "./Publish.css";
@@ -13,13 +12,6 @@ const Publish = () => {
   useEffect(() => {
     fetchFormsById(formId);
   }, [formId]);
-
-  const handlePublish = (data) => {
-    console.log("Publishing with data:", data);
-    setIsModalOpen(false);
-    // Add your publish logic here
-  };
-
   return (
     <div className='publish-page'>
       <FormSidebar pages={formByID.pages} />
@@ -40,7 +32,7 @@ const Publish = () => {
       <PublishModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onPublish={handlePublish}
+        form={formByID}
       />
     </div>
   );

@@ -5,17 +5,19 @@ import { IoCloseSharp } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
 import { useAuth } from "../../context/AuthContext";
 import { useProjects } from "../../context/ProjectContext";
+import { useForms } from "../../context/FormContext";
+import { API_PATHS } from "../../utils/apiPaths";
+import { toast } from "react-toastify";
 
-const PublishModal = ({ isOpen, onClose, onPublish }) => {
+const PublishModal = ({ isOpen, onClose, form }) => {
   const { user } = useAuth();
   const { projects } = useProjects();
+  const { shareForm } = useForms();
 
   const [saveToProject, setSaveToProject] =
     useState("Project");
 
-  const [responders, setResponders] = useState(
-    "Anyone with the Link"
-  );
+  const [responders, setResponders] = useState("Anyone");
   const [
     showRespondersDropdown,
     setShowRespondersDropdown,
@@ -40,21 +42,68 @@ const PublishModal = ({ isOpen, onClose, onPublish }) => {
     );
   };
 
-  const handlePublish = () => {
-    const emailData = mailEntries.map((entry) => ({
-      email: entry.email,
-      access: entry.access,
-    }));
-    onPublish({
-      project: saveToProject,
-      responders: responders,
-      emails: emailData,
-    });
+  const handlePublish = async () => {
+    try {
+      const accessType =
+        responders === "Anyone" ? "Anyone" : "Restricted";
+
+      if (accessType === "Restricted") {
+        for (const entry of mailEntries) {
+          if (entry.email.trim()) {
+            await shareForm(form._id, entry.email.trim());
+          }
+        }
+      }
+
+      const selectedProject = projects.find(
+        (p) => p.name === saveToProject
+      );
+
+      if (selectedProject && selectedProject._id) {
+        await fetch(
+          API_PATHS.FORMS.MOVE_FORM_TO_PROJECT(form._id),
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              projectId: selectedProject._id,
+            }),
+          }
+        );
+      }
+
+      const res = await fetch(
+        API_PATHS.FORMS.PUBLISH_FORM(form._id),
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            access: accessType,
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        const data = await res.json();
+        console.error("Error publishing form:", data.error);
+        return;
+      }
+      toast.success("Form Published.");
+    } catch (error) {
+      console.error("Failed to publish form:", error);
+      toast.error("Failed to publish form.");
+    }
   };
 
   const handleResponderChange = (option) => {
     if (option === "Anyone") {
-      setResponders("Anyone with the Link");
+      setResponders("Anyone");
     } else {
       setResponders("Restricted");
     }
@@ -168,13 +217,15 @@ const PublishModal = ({ isOpen, onClose, onPublish }) => {
             </label>
             <div className='publish-form-field publish-responders-field'>
               <span className='publish-field-value'>
-                {responders}
+                {responders === "Anyone"
+                  ? "Anyone with the link"
+                  : "Restricted"}
               </span>
               <button
                 className='publish-action-link'
                 onClick={toggleRespondersDropdown}
               >
-                {responders === "Anyone with the Link"
+                {responders === "Anyone"
                   ? "Anyone"
                   : "Restricted"}
               </button>

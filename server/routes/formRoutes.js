@@ -14,6 +14,8 @@ const {
   getSharedFormsForUser,
   shareForm,
   saveCondition,
+  publishForm,
+  assignFormToProject,
 } = require("../controllers/formController");
 
 formsRouter.get("/all-forms", userAuth, getAllForms);
@@ -24,8 +26,12 @@ formsRouter.get(
   userAuth,
   getFormsByProjectId
 );
-
+formsRouter.patch("/publish-form/:formId", publishForm);
 formsRouter.patch("/add-condition/:formId", saveCondition);
+formsRouter.patch(
+  "/move-form-to-project/:formId",
+  assignFormToProject
+);
 //DELETE
 formsRouter.delete("/delete/:formId", userAuth, deleteForm);
 formsRouter.delete(

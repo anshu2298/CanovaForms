@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import DropdownMenu from "../dropdownMenu/DropdownMenu";
 import { useForms } from "../../context/FormContext";
 import { Link, useParams } from "react-router-dom";
-const FormCard = ({ form, draft }) => {
+const FormCard = ({ form }) => {
   const { projectId } = useParams();
   const { deleteForm, updateForms, shareForm } = useForms();
   const [isSharing, setIsSharing] = useState(false);
@@ -69,10 +69,10 @@ const FormCard = ({ form, draft }) => {
       </Link>
       <div
         className={`form-tab-footer ${
-          draft ? "no-analysis" : ""
+          form.isDraft ? "no-analysis" : ""
         }`}
       >
-        {!draft && (
+        {!form.isDraft && (
           <button className='view-analysis-btn'>
             View Analysis
           </button>
@@ -112,9 +112,4 @@ const FormCard = ({ form, draft }) => {
   );
 };
 
-{
-  /* {draft && (
-    <span style={{ color: "gray" }}> (Draft)</span>
-    )} */
-}
 export default FormCard;

@@ -1,6 +1,6 @@
-// const BASE_URL =
-//   "https://canovaforms-backend.onrender.com/api";
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL =
+  "https://canovaforms-backend.onrender.com/api";
+// const BASE_URL = "http://localhost:3000/api";
 export const API_PATHS = {
   AUTH: {
     LOGIN: `${BASE_URL}/auth/login`,

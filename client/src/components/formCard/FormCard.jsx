@@ -63,9 +63,7 @@ const FormCard = ({ form }) => {
         className='form-link'
         onClick={() => {
           if (form.isPublished) {
-            navigate(
-              `${CLIENT_URL}/view-form/${form._id} `
-            );
+            window.location.href = `${CLIENT_URL}/view-form/${form._id}`;
             toast.info(
               "This form is already published and can't be edited."
             );

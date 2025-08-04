@@ -3,6 +3,7 @@ import UserForm from "../../components/userForm/UserForm";
 import { useForms } from "../../context/FormContext";
 import { useEffect, useState } from "react";
 import "./ViewerForm.css";
+import { toast } from "react-toastify";
 
 const ViewerForm = () => {
   const { id } = useParams();
@@ -18,6 +19,10 @@ const ViewerForm = () => {
   useEffect(() => {
     fetchFormsById(id);
   }, [id]);
+
+  const isLastPage = formByID?.pages?.length
+    ? currentPageIndex === formByID.pages.length - 1
+    : false;
 
   const handleNextPage = () => {
     if (
@@ -107,6 +112,12 @@ const ViewerForm = () => {
     });
   };
 
+  const handleSubmit = () => {
+    console.log("Final form responses:", responses);
+    // Submit to backend here
+    toast.success("Form submitted!");
+  };
+
   return (
     <div className='view-form-container'>
       <UserForm
@@ -115,12 +126,21 @@ const ViewerForm = () => {
         handleResponseChange={handleResponseChange}
       />
       <div className='viewer-navigation'>
-        <button
-          className='next-page-btn'
-          onClick={handleNextPage}
-        >
-          NEXT
-        </button>
+        {isLastPage ? (
+          <button
+            className='next-page-btn'
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        ) : (
+          <button
+            className='next-page-btn'
+            onClick={handleNextPage}
+          >
+            Next
+          </button>
+        )}
       </div>
     </div>
   );

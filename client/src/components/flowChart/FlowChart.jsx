@@ -1,51 +1,70 @@
 import "./FlowChart.css";
+import { RxCross1 } from "react-icons/rx";
+import { FaCheck } from "react-icons/fa6";
 
-function Flowchart({ truePage, flasePage }) {
+const FlowChart = ({ formData }) => {
+  const { pages, trueBranchFlow, falseBranchFlow } =
+    formData;
+
+  const renderBranch = (branch, branchType) => {
+    return (
+      <div className='branch'>
+        {branch.map((pageIndex, index) => (
+          <div
+            key={`${branchType}-${pageIndex}`}
+            className='branch-item'
+          >
+            <div className='page-box'>
+              {pages[pageIndex]}
+            </div>
+            {index < branch.length - 1 && (
+              <div className='vertical-connector'></div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className='flowchart-container'>
-      <div className='dropdown-container'>
-        <p className='page-box'>PAGE 01</p>
+      <div className='root-section'>
+        <div className='page-box root-page'>{pages[0]}</div>
+
+        <div className='decision-options'>
+          <div className='option-group'>
+            <div className='option-label'>
+              <FaCheck />
+              <span>True</span>
+            </div>
+          </div>
+          <div className='option-group'>
+            <div className='option-label'>
+              <RxCross1 />
+              <span>False</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Radio buttons */}
-      <div className='radio-container'>
-        <div className='radio-option'>TRUE</div>
-        <div className='radio-option'>FALSE</div>
+      {/* Connecting lines from root */}
+      <div className='root-connectors'>
+        <div className='connector-line left'></div>
+        <div className='connector-line right'></div>
       </div>
 
-      {/* Connecting lines and boxes */}
-      <div className='flowchart-content'>
-        {/* Vertical line from True */}
-        <div className='line vertical-line-2'></div>
+      {/* Branches */}
+      <div className='branches-container'>
+        <div className='branch-section'>
+          {renderBranch(trueBranchFlow, "true")}
+        </div>
 
-        {/* Horizontal line from False */}
-        <div className='line horizontal-line-1'></div>
-
-        {/* Vertical line from False horizontal */}
-        <div className='line vertical-line-2'></div>
-
-        {/* First level boxes */}
-        <div className='page-box box-1'>Page 01</div>
-        <div className='page-box box-2'>Page 01</div>
-
-        {/* Second level connecting lines */}
-        <div className='line vertical-line-3'></div>
-        <div className='line vertical-line-4'></div>
-
-        {/* Second level boxes */}
-        <div className='page-box box-3'>Page 01</div>
-        <div className='page-box box-4'>Page 01</div>
-
-        {/* Third level connecting lines */}
-        <div className='line vertical-line-5'></div>
-        <div className='line vertical-line-6'></div>
-
-        {/* Final level boxes */}
-        <div className='page-box box-5'>Page 01</div>
-        <div className='page-box box-6'>Page 01</div>
+        <div className='branch-section'>
+          {renderBranch(falseBranchFlow, "false")}
+        </div>
       </div>
     </div>
   );
-}
+};
 
-export default Flowchart;
+export default FlowChart;

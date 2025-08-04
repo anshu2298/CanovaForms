@@ -6,6 +6,7 @@ import DropdownMenu from "../dropdownMenu/DropdownMenu";
 import { useForms } from "../../context/FormContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { CLIENT_URL } from "../../utils/apiPaths";
 const FormCard = ({ form }) => {
   const { projectId } = useParams();
   const navigate = useNavigate();
@@ -62,6 +63,9 @@ const FormCard = ({ form }) => {
         className='form-link'
         onClick={() => {
           if (form.isPublished) {
+            navigate(
+              `${CLIENT_URL}/view-form/${form._id} `
+            );
             toast.info(
               "This form is already published and can't be edited."
             );

@@ -95,6 +95,7 @@ const PublishModal = ({ isOpen, onClose, form }) => {
         return;
       }
       toast.success("Form Published.");
+      onClose();
     } catch (error) {
       console.error("Failed to publish form:", error);
       toast.error("Failed to publish form.");

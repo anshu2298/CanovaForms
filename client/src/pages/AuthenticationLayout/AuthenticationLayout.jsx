@@ -9,7 +9,7 @@ const AuthenticationLayout = () => {
           <span className='logo-icon'>
             <PiAtomBold size={30} />
           </span>
-          <span className='logo-text'>CANOVA</span>
+          <span className='logo-text'>Formify</span>
         </div>
       </div>
 

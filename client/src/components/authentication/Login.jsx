@@ -71,10 +71,14 @@ const Login = () => {
   return (
     <div className='auth-card'>
       <div className='auth-header'>
-        <h1 className='auth-title'>Welcome CANOVA 👋</h1>
+        <h1 className='auth-title'>
+          Welcome to Formify 👋
+        </h1>
         <p className='auth-subtitle'>
-          Today is a new day. It's your day. You shape it.
-          Sign in to start managing your projects.
+          Welcome to Formify. A fresh start begins
+          today—your ideas, your forms, your way.
+          <br /> Sign in to start creating and managing
+          projects effortlessly.
         </p>
       </div>
 

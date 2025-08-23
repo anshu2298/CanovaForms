@@ -48,7 +48,7 @@ function Sidebar() {
           <span className='logo-icon'>
             <LuAtom />
           </span>
-          <span className='logo-text'>CANOVA</span>
+          <span className='logo-text'>Formify</span>
         </div>
       </div>
 

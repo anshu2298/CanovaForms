@@ -119,8 +119,6 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-module.exports = { updateUserProfile };
-
 module.exports = {
   getUserData,
   uploadProfilePicture,

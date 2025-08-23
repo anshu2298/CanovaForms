@@ -14,7 +14,6 @@ export const API_PATHS = {
     SEND_RESET_OTP: `${BASE_URL}/auth/send-reset-password-otp`,
     VERIFY_RESET_OTP: `${BASE_URL}/auth/verify-reset-otp`,
     RESET_PASSWORD: `${BASE_URL}/auth/reset-password`,
-    IS_AUTH: `${BASE_URL}/auth/is-auth`,
   },
   USER: {
     GET_USER: `${BASE_URL}/user/get-user`,

@@ -43,7 +43,9 @@ const ForgotPassword = ({ email, setEmail }) => {
   return (
     <div className='auth-card forgot-password-card'>
       <div className='auth-header'>
-        <h1 className='auth-title'>Welcome CANOVA 👋</h1>
+        <h1 className='auth-title'>
+          Welcome to Formify 👋
+        </h1>
         <p className='auth-subtitle'>
           Please enter your registered email ID to
           <br />

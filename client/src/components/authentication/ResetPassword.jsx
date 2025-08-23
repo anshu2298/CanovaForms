@@ -61,9 +61,8 @@ function ResetPassword({ email }) {
       <div className='auth-header'>
         <h1 className='auth-title'>Create New Password</h1>
         <p className='auth-subtitle'>
-          Today is a new day. It's your day. You shape it.
-          <br />
-          Sign in to start managing your projects.
+          Reset your password to regain access to your
+          Formify account.
         </p>
       </div>
 

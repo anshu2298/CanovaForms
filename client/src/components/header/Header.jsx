@@ -44,7 +44,7 @@ function Header() {
         </div>
       ) : (
         <h1 className='dashboard_header-title'>
-          Welcome to CANOVA
+          Welcome to Formify
         </h1>
       )}
     </div>
